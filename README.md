@@ -8,6 +8,10 @@ Red Monkey MPG is an experimental, source-available wireless CNC jog-pendant bri
 A Raspberry Pi Pico 2 W receives input from a supported Bluetooth controller
 and presents itself as a USB keyboard using a selectable CNC controller profile.
 
+<p align="center">
+  <img src="docs/assets/red-monkey-mpg-product.jpg" alt="Red Monkey MPG receiver with coral 8BitDo Lite 2 controller and USB cable" width="900">
+</p>
+
 > **Release status:** `0.4.0-rc.1` is a hardened release candidate,
 > not an approved commercial image. The prototype has completed Mac keyboard
 > and machine testing with the first CNC controller profile and one gamepad.
