@@ -27,6 +27,9 @@ powers the Pico and carries USB HID keyboard reports to the CNC controller.
 
 ## End-user guides
 
+- [Firmware installation and updates](docs/FIRMWARE_INSTALLATION.md) — download,
+  verify, install, recover, and validate an official UF2 release on macOS or
+  Windows.
 - [MASSO G3 Touch end-user guide](docs/MASSO_END_USER_GUIDE.md) — startup,
   controls, daily operation, safety checks, and troubleshooting for a receiver
   supplied preprogrammed for MASSO.

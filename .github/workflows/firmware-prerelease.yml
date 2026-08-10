@@ -100,7 +100,8 @@ jobs:
             '' \
             'Before publishing this draft, record the tested configurator version, controller/profile compatibility, hardware validation, and any safety-relevant changes.' \
             '' \
-            "Installation and operating instructions are in the documentation for tag $RELEASE_TAG.")
+            "Firmware installation: https://github.com/$GITHUB_REPOSITORY/blob/$RELEASE_TAG/docs/FIRMWARE_INSTALLATION.md" \
+            "Operating documentation: https://github.com/$GITHUB_REPOSITORY/tree/$RELEASE_TAG/docs")
           gh release create "$RELEASE_TAG" \
             "$RELEASE_DIR/red-monkey-mpg-firmware-$RELEASE_VERSION.uf2#Pico 2 W firmware (preview)" \
             --verify-tag \

@@ -8,6 +8,10 @@ This guide is for an end user who received a Red Monkey MPG receiver already
 programmed, configured, and paired for a MASSO G3 Touch. No firmware tools or
 setup application are required for normal operation.
 
+For firmware installation or updates, follow the separate
+[Firmware installation guide](FIRMWARE_INSTALLATION.md) before returning the
+receiver to machine service.
+
 This guide applies to the supplied configuration:
 
 - MASSO G3 Touch software profile 5.13
