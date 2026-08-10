@@ -18,7 +18,7 @@ session closes or USB is reset/suspended.
 {"protocol":1,"command":"GET_CONFIG"}
 {"protocol":1,"command":"GET_CNC_PROFILES"}
 {"protocol":1,"command":"START_SCAN"}
-{"protocol":1,"command":"PAIR_CANDIDATE","address":"E4:17:D8:32:66:02"}
+{"protocol":1,"command":"PAIR_CANDIDATE","address":"00:00:5E:00:53:01"}
 {"protocol":1,"command":"CONFIRM_PAIRING"}
 {"protocol":1,"command":"CANCEL_PAIRING"}
 {"protocol":1,"command":"SET_CONFIG","schema":1,"mapping":{"cncProfile":"masso-g3-touch-5.13"}}

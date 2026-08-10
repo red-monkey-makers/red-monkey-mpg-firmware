@@ -191,7 +191,7 @@ if(OPENMPG_BUILD_PICO)
   pico_enable_stdio_uart(openmpg_bt_scan 0)
   pico_add_extra_outputs(openmpg_bt_scan)
 
-  set(OPENMPG_CONTROLLER_ADDRESS "E4:17:D8:32:66:02" CACHE STRING
+  set(OPENMPG_CONTROLLER_ADDRESS "00:00:5E:00:53:01" CACHE STRING
       "Commissioning controller Bluetooth address")
   add_executable(openmpg_hid_dump EXCLUDE_FROM_ALL
     firmware/diagnostics/hid_dump.c

@@ -7,7 +7,8 @@ considered before treating it as universal.
 ## Identity
 
 - Advertised name: `8BitDo Lite 2`
-- Commissioning address: `E4:17:D8:32:66:02`
+- Commissioning address: unit-specific. Documentation and tests use the
+  reserved example address `00:00:5E:00:53:01`; substitute your own.
 - Mode switch: `D`
 - Transport: Bluetooth Classic HID
 - Input descriptor length: 83 bytes

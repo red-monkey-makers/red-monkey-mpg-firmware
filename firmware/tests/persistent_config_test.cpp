@@ -94,11 +94,11 @@ int main() {
   assert(decoded.deadman_mask == mapping.deadman_mask);
   assert(decoded.cnc_profile == mapping.cnc_profile);
 
-  assert(reloaded.store_controller_address(decoded, "e4:17:d8:32:66:02"));
+  assert(reloaded.store_controller_address(decoded, "00:00:5e:00:53:01"));
   assert(reloaded.sequence() == 2);
   PersistentConfig bonded{};
   assert(bonded.load(decoded));
-  assert(std::strcmp(bonded.controller_address(), "E4:17:D8:32:66:02") == 0);
+  assert(std::strcmp(bonded.controller_address(), "00:00:5E:00:53:01") == 0);
 
   ProductionMapping changed = decoded;
   changed.deadman_mask = 0x00040;  // L1
@@ -116,7 +116,7 @@ int main() {
   assert(fallback.load(fallback_mapping));
   assert(fallback.sequence() == 2);
   assert(fallback_mapping.deadman_mask == mapping.deadman_mask);
-  assert(std::strcmp(fallback.controller_address(), "E4:17:D8:32:66:02") == 0);
+  assert(std::strcmp(fallback.controller_address(), "00:00:5E:00:53:01") == 0);
 
   fake_tlv.fail_store = true;
   assert(!fallback.store(changed));
@@ -136,7 +136,7 @@ int main() {
   assert(!fallback.store(invalid));
   assert(fallback.sequence() == 3);
   assert(!fallback.store_controller_address(changed, "not-an-address"));
-  assert(!fallback.store_controller_address(changed, "E4:17:D8:32:66:02x"));
+  assert(!fallback.store_controller_address(changed, "00:00:5E:00:53:01x"));
   assert(!fallback.store_controller_address(changed, "00:00:00:00:00:00"));
   assert(!fallback.store_controller_address(changed, "FF:FF:FF:FF:FF:FF"));
 

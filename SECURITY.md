@@ -8,11 +8,25 @@ certified, safety-rated, or approved for unattended operation.
 
 ## Reporting a vulnerability
 
-Do not include controller addresses, receiver serials, manufacturing keys, or
-machine details in a public issue. Before commercial release, the maintainer
-must publish and monitor a private disclosure address or repository security-
-advisory channel, response targets, and a supported-version policy. Until that
-channel exists, commercial release remains blocked.
+**Report privately through
+[GitHub Security Advisories](https://github.com/red-monkey-makers/red-monkey-mpg-firmware/security/advisories/new)**
+("Report a vulnerability" on the repository Security tab). Do not open a public
+issue for a suspected vulnerability.
+
+Do not include controller Bluetooth addresses, receiver serial numbers,
+manufacturing keys, or identifying machine details in any report — public or
+private.
+
+Response targets, best effort for a pre-commercial project:
+
+- Acknowledgement within 5 business days.
+- An initial assessment, including whether motion safety is affected, within
+  15 business days.
+- Coordinated disclosure once a fix or documented mitigation is available.
+
+Before commercial release the maintainer must additionally publish a
+supported-version policy and a monitored disclosure address; commercial release
+remains blocked until both exist.
 
 ## Security boundaries
 

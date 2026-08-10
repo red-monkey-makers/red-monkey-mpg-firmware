@@ -36,7 +36,11 @@ if [[ ! $OPENMPG_USB_BCD_DEVICE =~ ^0[xX][0-9A-Fa-f]{4}$ ]]; then
 fi
 
 repo_root=$(cd "$(dirname "$0")/.." && pwd)
-ninja_bin=${OPENMPG_NINJA:-/Users/kevin/.pico-sdk/ninja/v1.13.2/ninja}
+ninja_bin=${OPENMPG_NINJA:-$(command -v ninja || true)}
+if [[ -z $ninja_bin || ! -x $ninja_bin ]]; then
+  echo "ninja not found; install it or set OPENMPG_NINJA to its path" >&2
+  exit 2
+fi
 release_root="$repo_root/outputs/releases/$release_version"
 if [[ -e $release_root ]]; then
   echo "refusing to overwrite existing release: $release_root" >&2
