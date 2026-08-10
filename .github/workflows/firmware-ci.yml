@@ -1,0 +1,70 @@
+name: Firmware CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  host-tests:
+    name: Host tests (${{ matrix.mode }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - mode: normal
+            sanitizers: "OFF"
+          - mode: asan-ubsan
+            sanitizers: "ON"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y ninja-build
+      - name: Configure
+        run: >-
+          cmake -S . -B build/host -G Ninja
+          -DOPENMPG_BUILD_PICO=OFF
+          -DOPENMPG_BUILD_HOST_TESTS=ON
+          -DOPENMPG_ENABLE_HOST_SANITIZERS=${{ matrix.sanitizers }}
+          -DCMAKE_BUILD_TYPE=Debug
+      - name: Build
+        run: cmake --build build/host
+      - name: Test
+        run: ctest --test-dir build/host --output-on-failure
+
+  pico-build:
+    name: Pico 2 W development artifact
+    runs-on: ubuntu-24.04
+    env:
+      PICO_SDK_COMMIT: 98a542c1a62fb549ffb5d66a3e5892b06276b670
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ARM toolchain
+        run: sudo apt-get update && sudo apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi ninja-build
+      - name: Fetch pinned Pico SDK
+        run: |
+          git init "$RUNNER_TEMP/pico-sdk"
+          git -C "$RUNNER_TEMP/pico-sdk" remote add origin https://github.com/raspberrypi/pico-sdk.git
+          git -C "$RUNNER_TEMP/pico-sdk" fetch --depth 1 origin "$PICO_SDK_COMMIT"
+          git -C "$RUNNER_TEMP/pico-sdk" checkout --detach FETCH_HEAD
+          git -C "$RUNNER_TEMP/pico-sdk" submodule update --init --depth 1
+      - name: Configure
+        run: >-
+          cmake -S . -B build/pico -G Ninja
+          -DPICO_SDK_PATH="$RUNNER_TEMP/pico-sdk"
+          -DPICO_BOARD=pico2_w
+          -DOPENMPG_BUILD_HOST_TESTS=OFF
+          -DOPENMPG_BUILD_PICO=ON
+          -DCMAKE_BUILD_TYPE=Release
+      - name: Build receiver
+        run: cmake --build build/pico --target openmpg_production_receiver
+      - name: Upload development artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: red-monkey-mpg-pico2w-development-uf2
+          path: build/pico/openmpg_production_receiver.uf2
+          if-no-files-found: error
+          retention-days: 14

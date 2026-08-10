@@ -1,0 +1,42 @@
+name: Controller profile request
+description: Propose or contribute support for another controller.
+title: "[Controller] "
+labels: ["controller-profile"]
+body:
+  - type: markdown
+    attributes:
+      value: Never attach receiver serials, Bluetooth addresses, or machine-sensitive information.
+  - type: input
+    id: controller
+    attributes:
+      label: Controller model
+    validations:
+      required: true
+  - type: input
+    id: mode
+    attributes:
+      label: Controller mode and firmware revision
+    validations:
+      required: true
+  - type: dropdown
+    id: transport
+    attributes:
+      label: Transport
+      options:
+        - Bluetooth Classic HID
+        - Bluetooth LE HID
+        - USB HID
+    validations:
+      required: true
+  - type: textarea
+    id: captures
+    attributes:
+      label: Diagnostic captures and tests
+      description: Describe descriptor/report fixtures without including a Bluetooth address.
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety acknowledgment
+      options:
+        - label: I understand a profile cannot weaken the shared dead-man, one-axis, timeout, neutral-rearm, or disconnect-release rules.
+          required: true

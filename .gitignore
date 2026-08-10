@@ -1,0 +1,8 @@
+build*/
+configurator/
+work/
+.cache/
+.DS_Store
+*.uf2
+*.elf
+*.map
