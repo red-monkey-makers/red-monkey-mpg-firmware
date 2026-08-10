@@ -1,4 +1,54 @@
-# Controlled commercial release process
+# Firmware release process
+
+## Preview releases
+
+Preview releases are tagged evaluation builds that retain the development USB
+identity and are never represented as approved commercial firmware. The
+[firmware prerelease workflow](../.github/workflows/firmware-prerelease.yml)
+runs only for tags beginning with `v` and requires a SemVer prerelease suffix.
+
+Before tagging, update the `OPENMPG_RELEASE_VERSION`,
+`OPENMPG_RELEASE_DATE`, and `OPENMPG_USB_BCD_DEVICE` defaults in
+`CMakeLists.txt` through a reviewed pull request. The tag without its leading
+`v` must exactly match the embedded version. For example:
+
+```bash
+git checkout main
+git pull --ff-only
+git tag -a v0.4.0-rc.1 -m "Red Monkey MPG firmware 0.4.0-rc.1"
+git push origin v0.4.0-rc.1
+```
+
+The workflow checks out that exact tag, fetches the pinned Pico SDK, performs
+two clean firmware builds, compares the UF2 files byte-for-byte, runs the
+sanitizer-backed host tests, and generates:
+
+- the versioned UF2 firmware image;
+- `SHA256SUMS`;
+- an SPDX firmware SBOM;
+- tagged-source checksums; and
+- release metadata containing the source and Pico SDK revisions.
+
+It uploads a short-lived workflow artifact and creates a **draft GitHub
+prerelease**. It never publishes the release. Before manually publishing the
+draft, review the generated changes and add the tested configurator version,
+controller/CNC-profile compatibility, commissioning results, known limits,
+and any safety-relevant changes to the release notes. Do not distribute a
+workflow artifact or a draft that has not completed that review.
+
+To stage the same preview package locally with the pinned SDK already present:
+
+```bash
+export PICO_SDK_PATH=/path/to/pinned/pico-sdk
+scripts/stage-preview-release.sh 0.4.0-rc.1
+```
+
+The script refuses to overwrite an existing version directory under
+`outputs/releases/`. Delete nothing merely to reuse a version; increment the
+prerelease number instead. Published release tags and assets should be treated
+as immutable.
+
+## Controlled commercial releases
 
 The release script builds the receiver twice in clean directories, compares
 the UF2 files byte-for-byte, runs sanitizer-backed host tests, creates a

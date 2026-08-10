@@ -1,0 +1,117 @@
+name: Firmware prerelease
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firmware-prerelease-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  stage-prerelease:
+    name: Build and draft prerelease
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    env:
+      PICO_SDK_COMMIT: 98a542c1a62fb549ffb5d66a3e5892b06276b670
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Validate release tag
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag=${GITHUB_REF_NAME}
+          version=${tag#v}
+          if [[ $tag == "$version" ]]; then
+            echo "release tag must begin with v" >&2
+            exit 2
+          fi
+          if [[ ! $version =~ ^[0-9]+\.[0-9]+\.[0-9]+-[0-9A-Za-z.-]+$ ]]; then
+            echo "preview tags must contain a SemVer prerelease suffix" >&2
+            exit 2
+          fi
+          if ! git tag --points-at HEAD | grep -Fx -- "$tag" >/dev/null; then
+            echo "checked-out commit is not tagged $tag" >&2
+            exit 2
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "release_dir=outputs/releases/$version" >> "$GITHUB_OUTPUT"
+
+      - name: Install build tools
+        run: >-
+          sudo apt-get update &&
+          sudo apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi
+          ninja-build
+
+      - name: Fetch pinned Pico SDK
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init "$RUNNER_TEMP/pico-sdk"
+          git -C "$RUNNER_TEMP/pico-sdk" remote add origin https://github.com/raspberrypi/pico-sdk.git
+          git -C "$RUNNER_TEMP/pico-sdk" fetch --depth 1 origin "$PICO_SDK_COMMIT"
+          git -C "$RUNNER_TEMP/pico-sdk" checkout --detach FETCH_HEAD
+          git -C "$RUNNER_TEMP/pico-sdk" submodule update --init --depth 1
+
+      - name: Stage reproducible preview release
+        env:
+          PICO_SDK_PATH: ${{ runner.temp }}/pico-sdk
+        run: scripts/stage-preview-release.sh "${{ steps.release.outputs.version }}"
+
+      - name: Upload verified workflow artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: red-monkey-mpg-${{ steps.release.outputs.version }}-prerelease
+          path: |
+            ${{ steps.release.outputs.release_dir }}/red-monkey-mpg-firmware-${{ steps.release.outputs.version }}.uf2
+            ${{ steps.release.outputs.release_dir }}/SHA256SUMS
+            ${{ steps.release.outputs.release_dir }}/firmware.spdx.json
+            ${{ steps.release.outputs.release_dir }}/RELEASE_METADATA.txt
+            ${{ steps.release.outputs.release_dir }}/source-files.sha256
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Create draft GitHub prerelease
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_DIR: ${{ steps.release.outputs.release_dir }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+          RELEASE_TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "a GitHub release already exists for $RELEASE_TAG; refusing to replace it" >&2
+            exit 3
+          fi
+          notes=$(printf '%s\n' \
+            '> [!WARNING]' \
+            '> Preview firmware for evaluation and controlled testing. This is not an approved commercial image. Red Monkey MPG is not safety-rated and never replaces a hard-wired E-stop.' \
+            '' \
+            'Before publishing this draft, record the tested configurator version, controller/profile compatibility, hardware validation, and any safety-relevant changes.' \
+            '' \
+            "Installation and operating instructions are in the documentation for tag $RELEASE_TAG.")
+          gh release create "$RELEASE_TAG" \
+            "$RELEASE_DIR/red-monkey-mpg-firmware-$RELEASE_VERSION.uf2#Pico 2 W firmware (preview)" \
+            "$RELEASE_DIR/SHA256SUMS#SHA-256 checksum manifest" \
+            "$RELEASE_DIR/firmware.spdx.json#SPDX firmware SBOM" \
+            "$RELEASE_DIR/RELEASE_METADATA.txt#Release build metadata" \
+            "$RELEASE_DIR/source-files.sha256#Tagged source checksums" \
+            --verify-tag \
+            --title "Red Monkey MPG Firmware $RELEASE_VERSION" \
+            --draft \
+            --prerelease \
+            --latest=false \
+            --generate-notes \
+            --notes "$notes"
+

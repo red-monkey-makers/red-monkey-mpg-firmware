@@ -1,6 +1,7 @@
 build*/
 configurator/
 work/
+outputs/releases/
 .cache/
 .DS_Store
 *.uf2
