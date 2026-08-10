@@ -102,7 +102,7 @@ machine use.
 ## Production configurator
 
 The Mac/Windows Web Serial application now lives in the separate
-**Red Monkey MPG Configurator** repository. Its demo mode exercises the intended
+[**Red Monkey MPG Configurator**](https://github.com/red-monkey-makers/red-monkey-mpg-configurator) repository. Its demo mode exercises the intended
 pairing and constrained mapping workflow without issuing hardware commands.
 See
 [docs/CONFIGURATION_PROTOCOL.md](docs/CONFIGURATION_PROTOCOL.md) for the
@@ -110,8 +110,9 @@ fail-closed USB protocol and the remaining receiver-side production gates.
 
 The firmware and configurator are intentionally separate repositories with
 independent versions and CI. The firmware owns protocol semantics and safety
-enforcement; the configurator is a constrained client. Add their final GitHub
-URLs to both READMEs after the repositories are created.
+enforcement; the configurator is a constrained client.
+
+Repository links: [firmware](https://github.com/red-monkey-makers/red-monkey-mpg-firmware) and [configurator](https://github.com/red-monkey-makers/red-monkey-mpg-configurator).
 
 The internal C/C++ namespace, build targets, environment variables, and
 protocol constants retain the `openmpg` / `OPENMPG` prefix during the public
