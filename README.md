@@ -108,31 +108,6 @@ receiver exposes a USB serial derived from its Pico chip ID. Follow
 [docs/PRODUCTION_RECEIVER_TEST.md](docs/PRODUCTION_RECEIVER_TEST.md) before
 machine use.
 
-## Production configurator
-
-The Mac/Windows Web Serial application now lives in the separate
-[**Red Monkey MPG Configurator**](https://github.com/red-monkey-makers/red-monkey-mpg-configurator) repository. Its demo mode exercises the intended
-pairing and constrained mapping workflow without issuing hardware commands.
-See
-[docs/CONFIGURATION_PROTOCOL.md](docs/CONFIGURATION_PROTOCOL.md) for the
-fail-closed USB protocol and the remaining receiver-side production gates.
-
-The firmware and configurator are intentionally separate repositories with
-independent versions and CI. The firmware owns protocol semantics and safety
-enforcement; the configurator is a constrained client.
-
-Repository links: [firmware](https://github.com/red-monkey-makers/red-monkey-mpg-firmware) and [configurator](https://github.com/red-monkey-makers/red-monkey-mpg-configurator).
-
-The internal C/C++ namespace, build targets, environment variables, and
-protocol constants retain the `openmpg` / `OPENMPG` prefix during the public
-rename so existing scripts and stored configuration remain compatible.
-
-The receiver implements the protocol, persistent BTstack link keys,
-atomic configuration storage, and motion locking for every open setup session.
-The web application does not make the pendant safety-rated and is not an
-authorization boundary: physical USB access plus browser serial permission is
-the setup trust boundary.
-
 ## Principles
 
 1. Release, disconnect, stale input, and faults always stop output.
