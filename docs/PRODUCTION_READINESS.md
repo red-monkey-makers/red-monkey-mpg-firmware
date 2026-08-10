@@ -1,7 +1,7 @@
 # Production and commercial readiness review
 
 Review date: 2026-08-10  
-Reviewed candidate: `0.3.2-production-rc1`
+Reviewed candidate: `0.4.0-rc.1`
 
 ## Verdict
 

@@ -9,7 +9,7 @@ the checks below pass. It is not yet an approved commercial release.
 1. Flash the UF2 with BOOTSEL and reconnect the Pico using a USB data cable.
 2. Open the local configurator in desktop Chrome or Edge and connect the
    filtered Red Monkey MPG receiver.
-3. Confirm the displayed firmware is `0.3.2-production-rc1` and the receiver
+3. Confirm the displayed firmware is `0.4.0-rc.1` and the receiver
    serial is unique.
 4. If no controller is shown, pair the Lite 2 in D mode. Select the discovered
    controller and hold L2 + R2 + Plus for three seconds when prompted.

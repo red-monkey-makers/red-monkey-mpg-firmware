@@ -33,11 +33,11 @@ set(OPENMPG_USB_VID "0xCAFE" CACHE STRING
     "Authorized USB vendor ID (0xCAFE is development-only)")
 set(OPENMPG_LITE2_DESCRIPTOR_SHA256 "" CACHE STRING
     "Approved 8BitDo Lite 2 D-mode HID descriptor SHA-256")
-set(OPENMPG_RELEASE_VERSION "0.3.2-production-rc1" CACHE STRING
+set(OPENMPG_RELEASE_VERSION "0.4.0-rc.1" CACHE STRING
     "Version embedded in the production receiver")
 set(OPENMPG_RELEASE_DATE "2026-08-10" CACHE STRING
     "ISO release date embedded in the production receiver")
-set(OPENMPG_USB_BCD_DEVICE "0x0302" CACHE STRING
+set(OPENMPG_USB_BCD_DEVICE "0x0400" CACHE STRING
     "USB bcdDevice revision for the production receiver")
 if(NOT OPENMPG_RELEASE_VERSION MATCHES
    "^[0-9]+\\.[0-9]+\\.[0-9]+([-+][0-9A-Za-z.-]+)?$")
