@@ -29,9 +29,10 @@ sanitizer-backed host tests, and generates:
 - tagged-source checksums; and
 - release metadata containing the source and Pico SDK revisions.
 
-It uploads a short-lived workflow artifact and creates a **draft GitHub
-prerelease**. It never publishes the release. Before manually publishing the
-draft, review the generated changes and add the tested configurator version,
+It uploads the complete verification package as a short-lived workflow
+artifact. The **draft GitHub prerelease** attaches only the UF2 that users copy
+to the device. The workflow never publishes the release. Before manually
+publishing the draft, review the generated changes and add the tested configurator version,
 controller/CNC-profile compatibility, commissioning results, known limits,
 and any safety-relevant changes to the release notes. Do not distribute a
 workflow artifact or a draft that has not completed that review.

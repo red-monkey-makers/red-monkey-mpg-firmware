@@ -103,10 +103,6 @@ jobs:
             "Installation and operating instructions are in the documentation for tag $RELEASE_TAG.")
           gh release create "$RELEASE_TAG" \
             "$RELEASE_DIR/red-monkey-mpg-firmware-$RELEASE_VERSION.uf2#Pico 2 W firmware (preview)" \
-            "$RELEASE_DIR/SHA256SUMS#SHA-256 checksum manifest" \
-            "$RELEASE_DIR/firmware.spdx.json#SPDX firmware SBOM" \
-            "$RELEASE_DIR/RELEASE_METADATA.txt#Release build metadata" \
-            "$RELEASE_DIR/source-files.sha256#Tagged source checksums" \
             --verify-tag \
             --title "Red Monkey MPG Firmware $RELEASE_VERSION" \
             --draft \
