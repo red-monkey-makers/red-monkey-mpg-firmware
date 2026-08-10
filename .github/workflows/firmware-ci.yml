@@ -20,7 +20,7 @@ jobs:
           - mode: asan-ubsan
             sanitizers: "ON"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install build tools
         run: sudo apt-get update && sudo apt-get install -y ninja-build
       - name: Configure
@@ -41,7 +41,7 @@ jobs:
     env:
       PICO_SDK_COMMIT: 98a542c1a62fb549ffb5d66a3e5892b06276b670
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install ARM toolchain
         run: sudo apt-get update && sudo apt-get install -y gcc-arm-none-eabi libnewlib-arm-none-eabi ninja-build
       - name: Fetch pinned Pico SDK
