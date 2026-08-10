@@ -1,7 +1,7 @@
 # Red Monkey MPG
 
 <p align="center">
-  <img src="docs/assets/red-monkey-mpg-banner.png" alt="Red Monkey MPG — Pair once. Jog with confidence." width="100%">
+  <img src="docs/assets/red-monkey-mpg-banner.webp" alt="Red Monkey MPG — Pair once. Jog with confidence." width="100%">
 </p>
 
 Red Monkey MPG is an experimental, source-available wireless CNC jog-pendant bridge.

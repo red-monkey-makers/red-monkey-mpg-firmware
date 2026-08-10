@@ -1,7 +1,7 @@
 # Red Monkey MPG user guide — MASSO G3 Touch
 
 <p align="center">
-  <img src="assets/red-monkey-mpg-banner.png" alt="Red Monkey MPG — Pair once. Jog with confidence." width="100%">
+  <img src="assets/red-monkey-mpg-banner.webp" alt="Red Monkey MPG — Pair once. Jog with confidence." width="100%">
 </p>
 
 This guide is for an end user who received a Red Monkey MPG receiver already

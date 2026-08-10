@@ -1,7 +1,7 @@
 # Install or update Red Monkey MPG firmware
 
 <p align="center">
-  <img src="assets/red-monkey-mpg-banner.png" alt="Red Monkey MPG — Pair once. Jog with confidence." width="100%">
+  <img src="assets/red-monkey-mpg-banner.webp" alt="Red Monkey MPG — Pair once. Jog with confidence." width="100%">
 </p>
 
 This guide is for an end user installing an official Red Monkey MPG firmware
