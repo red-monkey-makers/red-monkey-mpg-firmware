@@ -62,7 +62,7 @@ jobs:
       - name: Build receiver
         run: cmake --build build/pico --target openmpg_production_receiver
       - name: Upload development artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: red-monkey-mpg-pico2w-development-uf2
           path: build/pico/openmpg_production_receiver.uf2
