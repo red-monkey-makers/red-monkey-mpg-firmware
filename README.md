@@ -25,6 +25,12 @@ and presents itself as a USB keyboard using a selectable CNC controller profile.
 The Pico 2 W has a Micro-USB connector. The cable both
 powers the Pico and carries USB HID keyboard reports to the CNC controller.
 
+## End-user guides
+
+- [MASSO G3 Touch end-user guide](docs/MASSO_END_USER_GUIDE.md) — startup,
+  controls, daily operation, safety checks, and troubleshooting for a receiver
+  supplied preprogrammed for MASSO.
+
 ## Design
 
 ```text
