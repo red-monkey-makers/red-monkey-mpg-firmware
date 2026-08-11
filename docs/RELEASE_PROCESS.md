@@ -15,23 +15,25 @@ Before tagging, update the `RED_MONKEY_MPG_RELEASE_VERSION`,
 ```bash
 git checkout main
 git pull --ff-only
-git tag -a v0.4.0-rc.1 -m "Red Monkey MPG firmware 0.4.0-rc.1"
-git push origin v0.4.0-rc.1
+git tag -a v0.4.0-rc.2 -m "Red Monkey MPG firmware 0.4.0-rc.2"
+git push origin v0.4.0-rc.2
 ```
 
 The workflow checks out that exact tag, fetches the pinned Pico SDK, performs
-two clean firmware builds, compares the UF2 files byte-for-byte, runs the
+two clean builds of both receiver variants, compares each UF2 byte-for-byte, runs the
 sanitizer-backed host tests, and generates:
 
-- the versioned UF2 firmware image;
+- the versioned Bluetooth-gamepad receiver UF2;
+- the versioned iPhone receiver UF2;
 - `SHA256SUMS`;
 - an SPDX firmware SBOM;
 - tagged-source checksums; and
 - release metadata containing the source and Pico SDK revisions.
 
 It uploads the complete verification package as a short-lived workflow
-artifact. The **draft GitHub prerelease** attaches only the UF2 that users copy
-to the device. The workflow never publishes the release. Before manually
+artifact. The **draft GitHub prerelease** attaches both installable UF2 images.
+Users flash exactly one receiver variant at a time; the Pico cannot run both
+images simultaneously. The workflow never publishes the release. Before manually
 publishing the draft, review the generated changes and add the tested configurator version,
 controller/CNC-profile compatibility, commissioning results, known limits,
 and any safety-relevant changes to the release notes. Do not distribute a
@@ -41,7 +43,7 @@ To stage the same preview package locally with the pinned SDK already present:
 
 ```bash
 export PICO_SDK_PATH=/path/to/pinned/pico-sdk
-scripts/stage-preview-release.sh 0.4.0-rc.1
+scripts/stage-preview-release.sh 0.4.0-rc.2
 ```
 
 The script refuses to overwrite an existing version directory under

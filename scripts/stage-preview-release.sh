@@ -75,13 +75,18 @@ configure_pico() {
 for pass in a b; do
   build_dir="$release_root/build-$pass"
   configure_pico "$build_dir"
-  cmake --build "$build_dir" --target red_monkey_mpg_production_receiver --parallel
+  cmake --build "$build_dir" --target \
+    red_monkey_mpg_production_receiver red_monkey_mpg_mobile_receiver --parallel
 done
 
 cmp "$release_root/build-a/red_monkey_mpg_production_receiver.uf2" \
     "$release_root/build-b/red_monkey_mpg_production_receiver.uf2"
+cmp "$release_root/build-a/red_monkey_mpg_mobile_receiver.uf2" \
+    "$release_root/build-b/red_monkey_mpg_mobile_receiver.uf2"
 cp "$release_root/build-a/red_monkey_mpg_production_receiver.uf2" \
    "$release_root/red-monkey-mpg-firmware-$release_version.uf2"
+cp "$release_root/build-a/red_monkey_mpg_mobile_receiver.uf2" \
+   "$release_root/red-monkey-mpg-iphone-receiver-$release_version.uf2"
 
 host_dir="$release_root/host-tests"
 cmake -S "$repo_root" -B "$host_dir" -G Ninja \
@@ -118,9 +123,9 @@ EOF
   cd "$release_root"
   shasum -a 256 \
     "red-monkey-mpg-firmware-$release_version.uf2" \
+    "red-monkey-mpg-iphone-receiver-$release_version.uf2" \
     firmware.spdx.json RELEASE_METADATA.txt source-files.sha256 > SHA256SUMS
 )
 
 echo "Preview release staged at $release_root"
 echo "This artifact uses the development USB identity and is not a commercial image."
-

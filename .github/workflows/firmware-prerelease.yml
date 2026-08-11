@@ -74,6 +74,7 @@ jobs:
           name: red-monkey-mpg-${{ steps.release.outputs.version }}-prerelease
           path: |
             ${{ steps.release.outputs.release_dir }}/red-monkey-mpg-firmware-${{ steps.release.outputs.version }}.uf2
+            ${{ steps.release.outputs.release_dir }}/red-monkey-mpg-iphone-receiver-${{ steps.release.outputs.version }}.uf2
             ${{ steps.release.outputs.release_dir }}/SHA256SUMS
             ${{ steps.release.outputs.release_dir }}/firmware.spdx.json
             ${{ steps.release.outputs.release_dir }}/RELEASE_METADATA.txt
@@ -104,6 +105,7 @@ jobs:
             "Operating documentation: https://github.com/$GITHUB_REPOSITORY/tree/$RELEASE_TAG/docs")
           gh release create "$RELEASE_TAG" \
             "$RELEASE_DIR/red-monkey-mpg-firmware-$RELEASE_VERSION.uf2#Pico 2 W firmware (preview)" \
+            "$RELEASE_DIR/red-monkey-mpg-iphone-receiver-$RELEASE_VERSION.uf2#Pico 2 W iPhone receiver firmware (preview)" \
             --verify-tag \
             --title "Red Monkey MPG Firmware $RELEASE_VERSION" \
             --draft \
@@ -111,4 +113,3 @@ jobs:
             --latest=false \
             --generate-notes \
             --notes "$notes"
-

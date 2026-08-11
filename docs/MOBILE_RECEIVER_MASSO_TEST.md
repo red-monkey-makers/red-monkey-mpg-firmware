@@ -94,7 +94,7 @@ Proceed only after every Stage 0 and Stage 1 check passes.
 | MASSO model and software | |
 | iPhone model and iOS | |
 | App version/build | |
-| Firmware version | `0.4.0-rc.1` |
+| Firmware version | `0.4.0-rc.2` |
 | UF2 SHA-256 | |
 | Machine | |
 | Operator and date | |

@@ -12,7 +12,7 @@ and presents itself as a USB keyboard using a selectable CNC controller profile.
   <img src="docs/assets/red-monkey-mpg-product.jpg" alt="Red Monkey MPG receiver with coral 8BitDo Lite 2 controller and USB cable" width="900">
 </p>
 
-> **Release status:** `0.4.0-rc.1` is a hardened release candidate,
+> **Release status:** `0.4.0-rc.2` is a hardened release candidate,
 > not an approved commercial image. The prototype has completed Mac keyboard
 > and machine testing with the first CNC controller profile and one gamepad.
 > Red Monkey MPG is not a
@@ -119,11 +119,11 @@ receiver exposes a USB serial derived from its Pico chip ID. Follow
 [docs/PRODUCTION_RECEIVER_TEST.md](docs/PRODUCTION_RECEIVER_TEST.md) before
 machine use.
 
-The separate `red_monkey_mpg_mobile_receiver.uf2` image accepts the Red Monkey
-MPG iOS app instead of a Bluetooth gamepad. It is not yet part of the official
-release bundle and must pass the complete
-[iPhone receiver MASSO test](docs/MOBILE_RECEIVER_MASSO_TEST.md) before
-promotion.
+The separate `red-monkey-mpg-iphone-receiver-<version>.uf2` release image accepts
+the Red Monkey MPG iOS app instead of a Bluetooth gamepad. GitHub prereleases
+include both variants, but only one image can be installed on a Pico at a time.
+Complete the [iPhone receiver MASSO test](docs/MOBILE_RECEIVER_MASSO_TEST.md)
+before machine use.
 
 ## Principles
 

@@ -22,13 +22,16 @@ Pico SDK, and opening a serial terminal are not required.
 
 Download firmware from the project's
 [GitHub Releases page](https://github.com/red-monkey-makers/red-monkey-mpg-firmware/releases).
-Under **Assets**, download the file named like:
+Under **Assets**, download the receiver variant you intend to use:
 
 ```text
-red-monkey-mpg-firmware-0.4.0-rc.1.uf2
+red-monkey-mpg-firmware-0.4.0-rc.2.uf2
+red-monkey-mpg-iphone-receiver-0.4.0-rc.2.uf2
 ```
 
-The version will change in later releases. Do not copy GitHub's automatically
+The first image accepts the supported Bluetooth gamepad; the second accepts the
+Red Monkey MPG iPhone app. Install exactly one variant. The version will change
+in later releases. Do not copy GitHub's automatically
 generated source-code ZIP or TAR files to the receiver. Do not install files
 named `keyboard_bench`, `hid_dump`, `bt_scan`, `live_bridge_bench`,
 `commissioning`, or `preview`; those are development and diagnostic images.
@@ -41,13 +44,13 @@ confirms that the downloaded file matches the published asset.
 On macOS, open Terminal and run:
 
 ```sh
-shasum -a 256 ~/Downloads/red-monkey-mpg-firmware-0.4.0-rc.1.uf2
+shasum -a 256 ~/Downloads/red-monkey-mpg-firmware-0.4.0-rc.2.uf2
 ```
 
 On Windows, open PowerShell and run:
 
 ```powershell
-Get-FileHash "$HOME\Downloads\red-monkey-mpg-firmware-0.4.0-rc.1.uf2" -Algorithm SHA256
+Get-FileHash "$HOME\Downloads\red-monkey-mpg-firmware-0.4.0-rc.2.uf2" -Algorithm SHA256
 ```
 
 Use the actual downloaded filename. The resulting value must exactly match the
