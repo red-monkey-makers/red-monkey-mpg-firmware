@@ -33,13 +33,11 @@ This guide applies to the supplied configuration:
 | Right stick up / down | Z+ / Z− |
 | R2, held with L2 | Continuous jog |
 | A, pressed once | Cycle step size: 0.01, 0.10, 0.50, 1.00 mm |
-| Plus, pressed once | Increase the active MASSO override or jog feed |
-| Minus, pressed once | Decrease the active MASSO override or jog feed |
 | B | Cancel and release all pendant output |
 
-The D-pad, X, Y, L1, R1, Start, Select, and Star controls have no machine
-function in the supplied MASSO configuration. The Home button is used only to
-turn on and reconnect the controller.
+The D-pad, Plus, Minus, X, Y, L1, R1, Start, Select, and Star controls have no
+machine function in the supplied MASSO configuration. The Home button is used
+only to turn on and reconnect the controller.
 
 ## Before every use
 
@@ -142,18 +140,6 @@ Holding A does not repeatedly cycle the selection. After the receiver restarts,
 one press of A selects 0.01 mm in the supplied profile, but the MASSO display
 is always the final authority.
 
-## Change jog feed or override
-
-On the MASSO F3 screen, with L2 released and both sticks centered:
-
-- Press **Plus** once to increase the active jog feed or override.
-- Press **Minus** once to decrease it.
-
-Watch the displayed MASSO value and use individual presses. The receiver sends
-numeric-keypad Plus or Minus; MASSO decides what those keys control on the
-current screen. Avoid pressing them on other screens or when the displayed
-effect is unclear.
-
 ## Stop movement
 
 For a normal stop, release **L2**. The receiver immediately releases all USB
@@ -210,10 +196,10 @@ neutral controller after reconnection.
 Release L2 and center both sticks completely. A new axis cannot be selected
 until every stick axis has returned to neutral.
 
-### A, Plus, or Minus has no visible effect
+### A has no visible effect
 
-Release L2, center both sticks, and press the button once. Confirm that MASSO is
-on the appropriate F3 screen and watch its displayed value.
+Release L2, center both sticks, and press A once. Confirm that MASSO is on the
+F3 screen and watch the displayed step size.
 
 ### Movement is unexpected or does not stop
 
@@ -233,7 +219,6 @@ very low jog feed:
 - [ ] Turning off the controller during a low-risk jog releases motion.
 - [ ] X−, X+, Y−, Y+, Z−, and Z+ match the machine display and physical axes.
 - [ ] A cycles the four displayed MASSO step sizes in the documented order.
-- [ ] Plus and Minus change the intended displayed MASSO value.
 - [ ] A diagonal stick input never moves two axes at once.
 - [ ] Changing axes requires both sticks to return to center.
 
@@ -249,4 +234,3 @@ replacement, machine service, or any unexplained behavior.
 - When requesting support, provide the receiver label/serial number, MASSO
   software version, controller model, LED pattern, and a description of what is
   shown on the MASSO screen.
-

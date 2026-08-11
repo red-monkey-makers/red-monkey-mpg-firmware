@@ -51,7 +51,7 @@ MobileFrameResult MobileInputSession::consume(const std::uint8_t* data,
   }
   if ((data[5] & 0xF8u) != 0u) return reject(MobileFrameError::invalid_flags);
   if (data[4] > 6u) return reject(MobileFrameError::invalid_direction);
-  if (data[7] > 7u) return reject(MobileFrameError::invalid_event);
+  if (data[7] > 5u) return reject(MobileFrameError::invalid_event);
   if ((data[5] & 0x06u) == 0x06u) {
     return reject(MobileFrameError::ambiguous_rate);
   }
@@ -117,12 +117,6 @@ MobileFrameResult MobileInputSession::consume(const std::uint8_t* data,
           static_cast<StepResolution>(event - 1u);
       break;
     case 5:
-      result.input.override_decrease = true;
-      break;
-    case 6:
-      result.input.override_increase = true;
-      break;
-    case 7:
       result.input.cancel = true;
       break;
     default:

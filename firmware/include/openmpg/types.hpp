@@ -8,7 +8,6 @@ enum class Axis : std::uint8_t { x, y, z };
 enum class Direction : std::int8_t { negative = -1, positive = 1 };
 enum class JogRate : std::uint8_t { precision, normal, rapid };
 enum class StepResolution : std::uint8_t { mm_0_01, mm_0_10, mm_0_50, mm_1_00 };
-enum class OverrideAdjustment : std::uint8_t { none, increase, decrease };
 
 struct GamepadState {
   std::int16_t left_x{};
@@ -26,8 +25,6 @@ struct GamepadState {
   bool select_resolution{};
   StepResolution selected_resolution{StepResolution::mm_0_01};
   bool cancel{};
-  bool override_increase{};
-  bool override_decrease{};
   bool connected{};
   std::uint32_t sample_ms{};
 };
@@ -44,7 +41,6 @@ struct OutputFrame {
   JogCommand jog{};
   bool has_step_resolution{};
   StepResolution step_resolution{StepResolution::mm_0_01};
-  OverrideAdjustment override_adjustment{OverrideAdjustment::none};
 };
 
 }  // namespace openmpg

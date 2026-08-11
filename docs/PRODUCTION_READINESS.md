@@ -66,7 +66,7 @@ software tests does not certify a wireless machine-motion accessory.
    interruption at every flash phase, brownout, USB suspend/reset, controller
    replacement, RF loss/interference, watchdog recovery, long-duration soak,
    and repeated flash endurance.
-5. **Machine compatibility:** repeat direction, step, override, stuck-key, and
+5. **Machine compatibility:** repeat direction, step, stuck-key, and
    loss-of-link tests on every advertised CNC controller model/software/profile
    combination. Requalify the polled Bluetooth build and every profile-specific
    key usage before publishing compatibility.

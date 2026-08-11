@@ -15,8 +15,7 @@ Every compiled CNC profile contains:
 
 - a stable machine-readable ID and user-facing name;
 - a bounded `OutputFrame` to `KeyboardReport` translator;
-- declared capabilities such as step-resolution selection and override
-  adjustment;
+- declared capabilities such as step-resolution selection;
 - an explicit keyboard-command allowlist;
 - source/version notes for every shortcut;
 - host-side keyboard fixtures; and
@@ -57,6 +56,6 @@ and translators—not making raw keyboard output configurable.
 4. Implement a pure translator and declare its capabilities.
 5. Add positive, release, unsupported-ID, and one-axis host fixtures.
 6. Add the profile to the compiled registry and bounded protocol response.
-7. Complete motion-disabled direction, rate, override, disconnect, and fault
+7. Complete motion-disabled direction, rate, step, disconnect, and fault
    commissioning on every advertised controller/software combination.
 8. Publish the compatibility evidence before calling the profile supported.

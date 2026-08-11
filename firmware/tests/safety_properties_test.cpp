@@ -107,8 +107,6 @@ int main() {
     input.cancel = (next_random() & 0x1fu) == 0;
     input.cycle_resolution = (next_random() & 0x1fu) == 0;
     input.select_resolution = (next_random() & 0x1fu) == 0;
-    input.override_increase = (next_random() & 0x1fu) == 0;
-    input.override_decrease = (next_random() & 0x1fu) == 0;
     input.left_x = random_axis();
     input.left_y = random_axis();
     input.right_x = random_axis();
@@ -122,7 +120,6 @@ int main() {
       assert(input.connected && input.deadman && !input.cancel && !stale);
       assert(!frame.release_all);
       assert(!frame.has_step_resolution);
-      assert(frame.override_adjustment == OverrideAdjustment::none);
     }
     if (!input.deadman || !input.connected || input.cancel || stale) {
       assert(!frame.has_jog);

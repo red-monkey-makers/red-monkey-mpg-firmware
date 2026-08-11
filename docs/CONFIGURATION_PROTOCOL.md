@@ -51,8 +51,7 @@ into the receiver. Version 1 supports:
 
 - CNC profile: a value returned by `GET_CNC_PROFILES`
 - configurable motion controls: `L1`, `L2`, `R2` (`R1` is fixed precision)
-- legacy resolution field: `UNASSIGNED` (Plus/Minus are reserved for
-  profile-defined override adjustment when supported)
+- legacy resolution field: `UNASSIGNED`
 - face actions: `UNASSIGNED`, `CANCEL`, `CYCLE_RESOLUTION`, `STEP_0_01`,
   `STEP_0_10`, `STEP_0_50`, and `STEP_1_00`
 

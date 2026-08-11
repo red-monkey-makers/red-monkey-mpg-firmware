@@ -49,7 +49,7 @@ the checks below pass. It is not yet an approved commercial release.
 3. Confirm no movement without L2, one axis at a time, immediate release on L2
    release, USB suspend, or signal loss, and neutral re-arm after reconnect.
 4. Confirm every capability advertised by the selected profile, including step
-   resolution and override adjustment when supported.
+   resolution when supported.
 
 Opening the setup serial port immediately releases every HID key and keeps
 motion locked until the setup session closes and neutral controls are observed.

@@ -123,8 +123,7 @@ feed:
 - [ ] A diagonal input never moves more than one axis.
 - [ ] Releasing L2 immediately stops pendant-commanded movement.
 - [ ] Turning off the controller during a low-risk test releases movement.
-- [ ] Step size and override controls change only the intended displayed CNC
-      setting.
+- [ ] Step-size controls change only the intended displayed CNC setting.
 
 Stop and remove the receiver from service if any check fails. Use the physical
 E-stop for dangerous or unexpected movement.
@@ -176,4 +175,3 @@ Do not install an older firmware version unless its release notes explicitly
 support downgrading from the installed version. Configuration formats and CNC
 or controller profiles can change. A downgrade may require pairing and mapping
 the receiver again.
-

@@ -8,7 +8,7 @@
 namespace openmpg {
 
 constexpr std::size_t kMobileFrameLength = 10;
-constexpr std::uint8_t kMobileProtocolVersion = 1;
+constexpr std::uint8_t kMobileProtocolVersion = 2;
 
 enum class MobileControllerProfile : std::uint8_t {
   masso = 1,

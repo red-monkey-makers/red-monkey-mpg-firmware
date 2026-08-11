@@ -21,7 +21,6 @@ struct CncControllerProfile {
   const char* name;
   const char* description;
   bool supports_step_resolution;
-  bool supports_override_adjustment;
   KeyboardReport (*keyboard_report)(const OutputFrame& frame);
 };
 

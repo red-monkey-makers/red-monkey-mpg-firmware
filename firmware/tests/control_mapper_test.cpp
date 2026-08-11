@@ -33,7 +33,8 @@ int main() {
   const std::uint8_t plus[] = {0xA1, 0x01, 0x00, 0x08, 0x80, 0x7F,
                                0x7F, 0x7F, 0x80, 0x00, 0x00};
   assert(parser.parse(plus, sizeof(plus), 81, parsed));
-  assert(parsed.override_increase && !parsed.cycle_resolution);
+  assert((parsed.buttons & lite2_button::plus) != 0 &&
+         !parsed.cycle_resolution);
 
   ControlMapper mapper{};
   GamepadState input{};
@@ -85,22 +86,6 @@ int main() {
          out.step_resolution == StepResolution::mm_0_01);
   assert(!resolution_mapper.update(resolution_input, 2000).has_step_resolution);
 
-  // Plus/minus produce one keypad override adjustment per press, only with the
-  // dead-man released and all axes centered.
-  ControlMapper override_mapper{};
-  GamepadState override_input{};
-  override_input.connected = true;
-  override_input.sample_ms = 2100;
-  override_input.override_increase = true;
-  out = override_mapper.update(override_input, 2100);
-  assert(out.override_adjustment == OverrideAdjustment::increase);
-  assert(override_mapper.update(override_input, 2100).override_adjustment ==
-         OverrideAdjustment::none);
-  override_input.override_increase = false;
-  (void)override_mapper.update(override_input, 2100);
-  override_input.override_decrease = true;
-  out = override_mapper.update(override_input, 2100);
-  assert(out.override_adjustment == OverrideAdjustment::decrease);
   resolution_input.cycle_resolution = false;
   assert(!resolution_mapper.update(resolution_input, 2000).has_step_resolution);
   resolution_input.cycle_resolution = true;
@@ -148,17 +133,9 @@ int main() {
   frame.step_resolution = StepResolution::mm_1_00;
   assert(masso_g3_keyboard_report(frame)[2] == 0x1e);  // 1
 
-  frame = {};
-  frame.release_all = false;
-  frame.override_adjustment = OverrideAdjustment::increase;
-  keys = masso_g3_keyboard_report(frame);
-  assert(keys[0] == 0 && keys[2] == 0x57);  // Keypad +
-  frame.override_adjustment = OverrideAdjustment::decrease;
-  keys = masso_g3_keyboard_report(frame);
-  assert(keys[0] == 0 && keys[2] == 0x56);  // Keypad -
-
   // Profile dispatch preserves the verified first translator and releases
   // every key for an unknown stored profile ID.
+  keys = masso_g3_keyboard_report(frame);
   assert(cnc_controller_keyboard_report(
              CncControllerProfileId::masso_g3_touch_5_13, frame) == keys);
   assert(cnc_controller_keyboard_report(
@@ -170,8 +147,7 @@ int main() {
   GamepadState raw{};
   raw.buttons = 0x00100 | 0x00200 | 0x00001 | 0x00800;
   const auto mapped = apply_production_mapping(raw, production);
-  assert(mapped.deadman && mapped.rapid && mapped.cycle_resolution &&
-         mapped.override_increase);
+  assert(mapped.deadman && mapped.rapid && mapped.cycle_resolution);
   production.deadman_mask = production.continuous_mask;
   assert(validate_production_mapping(production) ==
          ConfigValidation::duplicate_motion_control);

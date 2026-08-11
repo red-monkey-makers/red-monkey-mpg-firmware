@@ -16,15 +16,12 @@ constexpr std::uint8_t kKey1 = 0x1e;
 constexpr std::uint8_t kKey2 = 0x1f;
 constexpr std::uint8_t kKey3 = 0x20;
 constexpr std::uint8_t kKey4 = 0x21;
-constexpr std::uint8_t kKeypadMinus = 0x56;
-constexpr std::uint8_t kKeypadPlus = 0x57;
 
 constexpr CncControllerProfile kProfiles[] = {{
     CncControllerProfileId::masso_g3_touch_5_13,
     "masso-g3-touch-5.13",
     "MASSO G3 Touch 5.13",
-    "Arrow/U/D jogging, Shift continuous jog, 1-4 step selection, keypad +/- override",
-    true,
+    "Arrow/U/D jogging, Shift continuous jog, 1-4 step selection",
     true,
     masso_g3_keyboard_report,
 }};
@@ -85,13 +82,6 @@ KeyboardReport masso_g3_keyboard_report(const OutputFrame& frame) {
         report[2] = kKey1;
         break;
     }
-    return report;
-  }
-
-  if (frame.override_adjustment != OverrideAdjustment::none) {
-    report[2] = frame.override_adjustment == OverrideAdjustment::increase
-                    ? kKeypadPlus
-                    : kKeypadMinus;
     return report;
   }
 

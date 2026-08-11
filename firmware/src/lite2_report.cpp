@@ -36,8 +36,6 @@ bool Lite2ReportParser::parse(const std::uint8_t* report, std::size_t length,
   parsed.precision = (parsed.buttons & lite2_button::right_shoulder) != 0;
   parsed.cycle_resolution = (parsed.buttons & lite2_button::a) != 0;
   parsed.cancel = (parsed.buttons & lite2_button::b) != 0;
-  parsed.override_increase = (parsed.buttons & lite2_button::plus) != 0;
-  parsed.override_decrease = (parsed.buttons & lite2_button::minus) != 0;
   parsed.connected = true;
   parsed.sample_ms = sample_ms;
   output = parsed;

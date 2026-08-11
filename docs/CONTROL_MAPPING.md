@@ -13,8 +13,7 @@ USB keyboard reports implement these actions on a particular machine.
 | L1 | Configurable motion modifier | Cannot alias dead-man, continuous, or fixed precision |
 | R1 (hold) | Precision rate | Fixed in mapping schema 1 |
 | A | Cycle/select step resolution | One event per new press; only while neutral and disarmed |
-| Plus | Increase override when supported by the CNC profile | One event per new press |
-| Minus | Decrease override when supported by the CNC profile | One event per new press |
+| Plus / Minus | Unassigned | Reserved for future constrained actions |
 | D-pad | Unassigned | Reserved for future constrained actions |
 | B | Cancel / release all | Immediately releases output and requires neutral re-arm |
 | X / Y | Configurable approved non-motion actions | Never accepts arbitrary USB keys |

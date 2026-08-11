@@ -62,7 +62,7 @@ void test_invalid_frames_fail_closed() {
   assert(session.consume(bytes.data(), bytes.size(), 0).error ==
          openmpg::MobileFrameError::ambiguous_rate);
 
-  bytes = frame(1, 0, 0, 1, 8);
+  bytes = frame(1, 0, 0, 1, 6);
   assert(session.consume(bytes.data(), bytes.size(), 0).error ==
          openmpg::MobileFrameError::invalid_event);
   bytes = frame(1);
@@ -88,15 +88,15 @@ void test_replay_and_wrap_handling() {
 
 void test_discrete_event_is_deduplicated() {
   openmpg::MobileInputSession session;
-  auto bytes = frame(1, 0, 0, 9, 6);
+  auto bytes = frame(1, 0, 0, 9, 5);
   auto result = session.consume(bytes.data(), bytes.size(), 0);
   assert(result.accepted);
-  assert(result.input.override_increase);
+  assert(result.input.cancel);
 
-  bytes = frame(2, 0, 0, 9, 6);
+  bytes = frame(2, 0, 0, 9, 5);
   result = session.consume(bytes.data(), bytes.size(), 1);
   assert(result.accepted);
-  assert(!result.input.override_increase);
+  assert(!result.input.cancel);
 
   bytes = frame(3, 0, 0, 10, 2);
   result = session.consume(bytes.data(), bytes.size(), 2);

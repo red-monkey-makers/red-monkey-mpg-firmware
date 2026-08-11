@@ -255,12 +255,10 @@ void ConfigService::handle_line(char* line) {
           body + used, sizeof(body) - used,
           "%s{\"id\":\"%s\",\"name\":\"%s\","
           "\"description\":\"%s\","
-          "\"supportsStepResolution\":%s,"
-          "\"supportsOverrideAdjustment\":%s}",
+          "\"supportsStepResolution\":%s}",
           index == 0 ? "" : ",", profile->key, profile->name,
           profile->description,
-          profile->supports_step_resolution ? "true" : "false",
-          profile->supports_override_adjustment ? "true" : "false");
+          profile->supports_step_resolution ? "true" : "false");
       if (written < 0 || static_cast<std::size_t>(written) >=
                              sizeof(body) - used) {
         complete = false;

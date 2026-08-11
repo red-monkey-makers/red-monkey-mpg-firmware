@@ -75,7 +75,7 @@ scripts/               Controlled release and SBOM tooling
 - [x] Selectable CNC-controller output profile registry and TinyUSB keyboard output
 - [x] Bluetooth Classic HID host for the commissioned Lite 2
 - [x] Disconnect, stale-input, USB-fault, and neutral-rearm handling
-- [x] A-button resolution cycling and +/− feed override
+- [x] A-button resolution cycling
 - [x] Verify the first CNC profile's shortcuts from controller documentation
 - [x] First hardware-in-the-loop motion test
 - [x] Configuration protocol v1 specification and browser-app preview

@@ -69,7 +69,7 @@ Exercise each control and compare the app with the USB serial log:
 - Verify no second direction activates until every direction is released.
 - Verify releasing ENABLE immediately returns to neutral.
 - Test CONTINUOUS and PRECISION separately; they must never be active together.
-- Select every resolution and test override −, override +, and cancel.
+- Select every resolution and test cancel.
 - Background the app and turn off Bluetooth; both must fail closed.
 - Leave a motion control held and stop the app; the receiver must time out and
   return to neutral within 150 ms of its last valid control frame.

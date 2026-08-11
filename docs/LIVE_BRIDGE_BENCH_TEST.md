@@ -33,8 +33,6 @@ every press, release, reconnect, and fault case on the Mac first.
 | Release and press A three more times | `3`, `2`, `1`, one key per press |
 | Hold A | No repeated keys |
 | Press A while L2 is held or a stick is displaced | No resolution key |
-| Press Plus once with L2 released and sticks centered | Numeric-keypad `+`, then release |
-| Press Minus once with L2 released and sticks centered | Numeric-keypad `-`, then release |
 | L2 + left stick left/right | Left/Right Arrow |
 | L2 + left stick up/down | Up/Down Arrow |
 | L2 + right stick up/down | U/D |

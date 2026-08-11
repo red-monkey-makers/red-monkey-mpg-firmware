@@ -22,8 +22,6 @@ class ControlMapper {
   bool awaiting_center_{};
   bool resolution_button_was_pressed_{};
   bool selection_button_was_pressed_{};
-  bool override_increase_was_pressed_{};
-  bool override_decrease_was_pressed_{};
   StepResolution next_resolution_{StepResolution::mm_0_01};
 };
 

@@ -80,8 +80,6 @@ GamepadState apply_production_mapping(const GamepadState& raw,
     mapped.precision = false;
     mapped.cycle_resolution = false;
     mapped.select_resolution = false;
-    mapped.override_increase = false;
-    mapped.override_decrease = false;
     mapped.cancel = true;
     return mapped;
   }
@@ -93,12 +91,6 @@ GamepadState apply_production_mapping(const GamepadState& raw,
       (raw.buttons & mapping.resolution_mask) != 0;
   mapped.cancel = false;
   mapped.select_resolution = false;
-  const auto* profile = cnc_controller_profile(mapping.cnc_profile);
-  const bool supports_override =
-      profile != nullptr && profile->supports_override_adjustment;
-  mapped.override_increase = supports_override && (raw.buttons & 0x00800) != 0;
-  mapped.override_decrease = supports_override && (raw.buttons & 0x00400) != 0;
-
   const ButtonAction actions[] = {mapping.face_a, mapping.face_b,
                                   mapping.face_x, mapping.face_y};
   for (int i = 0; i < 4; ++i) {

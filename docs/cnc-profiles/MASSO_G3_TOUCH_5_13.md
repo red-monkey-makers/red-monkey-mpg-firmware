@@ -18,13 +18,11 @@ project.
 | Z− / Z+ | D / U |
 | Continuous jog | Shift + direction |
 | Step 1.00 / 0.50 / 0.10 / 0.01 mm | 1 / 2 / 3 / 4 |
-| Override increase / decrease | Numeric keypad + / - |
 
 The direction keys without Shift perform step jogging. Shift plus a direction
-performs continuous jogging at the controller's configured jog feed rate. The
-profile emits keypad Plus/Minus only; it does not select an override context.
+performs continuous jogging at the controller's configured jog feed rate.
 
 Shortcut source and commissioning details remain in
 [MASSO G3 Touch 5.13 commissioning](../MASSO_G3_513_COMMISSIONING.md). Physical
-direction, active screen, displayed resolution, and override behavior must be
+direction, active screen, and displayed resolution must be
 recorded for each supported software release.

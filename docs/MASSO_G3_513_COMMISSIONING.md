@@ -32,9 +32,8 @@ Official references:
 6. Put the Lite 2 in D mode and press Home once.
 7. Keep L2 released and center both sticks. A solid Pico LED means ready.
 8. Open MASSO's F3 Jog / Rapid screen.
-9. Select the smallest step size and lowest practical Jog Feed Rate. On F3,
-   verify that controller Plus/Minus increase and decrease the displayed
-   override before using continuous jog.
+9. Select the smallest step size and lowest practical Jog Feed Rate on F3
+   before using continuous jog.
 10. Confirm stick movement without L2 causes no MASSO jog indication or
     commanded-position change.
 11. Test one direction at a time with brief L2 presses:

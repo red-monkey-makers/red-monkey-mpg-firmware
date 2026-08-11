@@ -26,7 +26,6 @@
 - [x] Edge-triggered step resolution and one-axis selection
 - [x] Constrained user mappings with versioned, redundant storage
 - [x] Production-safe pairing transaction and browser setup workflow
-- [x] Profile-defined Plus/Minus override controls
 
 ## 0.5 — CNC controller profiles
 

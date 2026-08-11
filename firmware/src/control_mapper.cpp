@@ -15,8 +15,6 @@ OutputFrame ControlMapper::update(const GamepadState& in,
     awaiting_center_ = false;
     resolution_button_was_pressed_ = false;
     selection_button_was_pressed_ = false;
-    override_increase_was_pressed_ = false;
-    override_decrease_was_pressed_ = false;
     return out;
   }
 
@@ -35,12 +33,6 @@ OutputFrame ControlMapper::update(const GamepadState& in,
   const bool selection_rising_edge =
       in.select_resolution && !selection_button_was_pressed_;
   selection_button_was_pressed_ = in.select_resolution;
-  const bool override_increase_rising_edge =
-      in.override_increase && !override_increase_was_pressed_;
-  override_increase_was_pressed_ = in.override_increase;
-  const bool override_decrease_rising_edge =
-      in.override_decrease && !override_decrease_was_pressed_;
-  override_decrease_was_pressed_ = in.override_decrease;
 
   if (in.cancel) {
     locked_axis_.reset();
@@ -75,12 +67,6 @@ OutputFrame ControlMapper::update(const GamepadState& in,
           next_resolution_ = StepResolution::mm_0_01;
           break;
       }
-    } else if (all_centered && override_increase_rising_edge) {
-      out.release_all = false;
-      out.override_adjustment = OverrideAdjustment::increase;
-    } else if (all_centered && override_decrease_rising_edge) {
-      out.release_all = false;
-      out.override_adjustment = OverrideAdjustment::decrease;
     }
     return out;
   }
