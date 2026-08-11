@@ -86,7 +86,7 @@ The test passes only if:
 - every release, disconnect, and timeout produces neutral state; and
 - macOS Keyboard Viewer shows no keys from the diagnostic receiver.
 
-After testing, flash the desired production release UF2 before reconnecting the
-Pico to any CNC controller. The production receiver does not yet enable the
-mobile BLE input path; that integration remains gated on successful bench and
-hardware-in-the-loop validation.
+After testing, either restore the gamepad production UF2 or build the separate
+`red_monkey_mpg_mobile_receiver` candidate. Do not connect the mobile candidate
+to a machine until following every stage in
+[`MOBILE_RECEIVER_MASSO_TEST.md`](MOBILE_RECEIVER_MASSO_TEST.md).

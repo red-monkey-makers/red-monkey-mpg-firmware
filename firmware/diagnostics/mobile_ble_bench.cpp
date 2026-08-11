@@ -1,4 +1,6 @@
-// Safe iPhone BLE diagnostic. This image contains no USB keyboard output.
+// Shared iPhone BLE receiver implementation. The diagnostic target contains no
+// USB keyboard output; the production target enables the fail-closed keyboard
+// bridge with RED_MONKEY_MPG_MOBILE_USB_KEYBOARD.
 
 #include <array>
 #include <cinttypes>
@@ -8,7 +10,13 @@
 
 #include "btstack.h"
 #include "mobile_jogger.h"
+#include "red_monkey_mpg/control_mapper.hpp"
+#include "red_monkey_mpg/masso_keyboard.hpp"
 #include "red_monkey_mpg/mobile_protocol.hpp"
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+#include "hardware/watchdog.h"
+#include "usb_keyboard_device.h"
+#endif
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 
@@ -24,6 +32,9 @@ constexpr std::uint8_t kStatusDiagnostic = 1u << 4u;
 constexpr std::uint8_t kErrorNone = 0;
 constexpr std::uint8_t kErrorMalformed = 1;
 constexpr std::uint8_t kErrorStale = 2;
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+constexpr std::uint8_t kErrorUsbUnavailable = 5;
+#endif
 
 red_monkey_mpg::MobileInputSession session{};
 hci_con_handle_t connection_handle = HCI_CON_HANDLE_INVALID;
@@ -38,6 +49,34 @@ std::uint8_t controller_profile{
     static_cast<std::uint8_t>(red_monkey_mpg::MobileControllerProfile::masso)};
 bool notify_enabled{};
 bool neutral_required{true};
+
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+red_monkey_mpg::ControlMapper mapper{};
+red_monkey_mpg::KeyboardReport desired_report{};
+red_monkey_mpg::KeyboardReport sent_report{};
+
+bool report_has_key(const red_monkey_mpg::KeyboardReport& report) {
+  for (const auto byte : report) {
+    if (byte != 0) return true;
+  }
+  return false;
+}
+
+void publish_release() { desired_report = {}; }
+
+void reset_mapper(std::uint32_t now_ms) {
+  red_monkey_mpg::GamepadState disconnected{};
+  disconnected.sample_ms = now_ms;
+  (void)mapper.update(disconnected, now_ms);
+}
+
+bool usb_ready() {
+  return red_monkey_mpg_usb_keyboard_mounted() &&
+         red_monkey_mpg_usb_keyboard_ready();
+}
+#else
+bool usb_ready() { return false; }
+#endif
 
 std::array<std::uint8_t, 21> advertisement{
     0x02, BLUETOOTH_DATA_TYPE_FLAGS, 0x02,
@@ -54,13 +93,20 @@ static_assert(advertisement.size() <= 31);
 static_assert(scan_response.size() <= 31);
 
 std::array<std::uint8_t, red_monkey_mpg::kMobileFrameLength> status_frame() {
+  const bool output_locked =
+      neutral_required ||
+      (RED_MONKEY_MPG_MOBILE_USB_KEYBOARD && !usb_ready());
   std::array<std::uint8_t, red_monkey_mpg::kMobileFrameLength> bytes{
       0x53,
       red_monkey_mpg::kMobileProtocolVersion,
       static_cast<std::uint8_t>(last_sequence),
       static_cast<std::uint8_t>(last_sequence >> 8u),
-      static_cast<std::uint8_t>(kStatusBluetoothReady | kStatusDiagnostic |
-                                (neutral_required ? kStatusNeutralRequired : 0)),
+      static_cast<std::uint8_t>(
+          kStatusBluetoothReady |
+          (usb_ready() ? kStatusUsbReady : 0) |
+          (output_locked ? kStatusOutputLocked : 0) |
+          (neutral_required ? kStatusNeutralRequired : 0) |
+          (RED_MONKEY_MPG_MOBILE_USB_KEYBOARD ? 0 : kStatusDiagnostic)),
       active_direction,
       resolution,
       error_code,
@@ -117,6 +163,10 @@ int write_callback(hci_con_handle_t, std::uint16_t attribute_handle,
     active_direction = 0;
     neutral_required = true;
     error_code = kErrorMalformed;
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+    reset_mapper(now_ms);
+    publish_release();
+#endif
     std::printf("REJECT error=%u length=%u\n",
                 static_cast<unsigned>(parsed.error), buffer_size);
     request_status_notification();
@@ -142,6 +192,18 @@ int write_callback(hci_con_handle_t, std::uint16_t attribute_handle,
     neutral_required = true;
   }
 
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+  if (neutral_required && parsed.input.deadman && buffer[4] != 0) {
+    reset_mapper(now_ms);
+    publish_release();
+  } else {
+    const auto output = mapper.update(parsed.input, now_ms);
+    desired_report = red_monkey_mpg::cnc_controller_keyboard_report(
+        red_monkey_mpg::CncControllerProfileId::masso_g3_touch_5_13, output);
+    active_direction = output.has_jog ? buffer[4] : 0;
+  }
+#endif
+
   std::printf("MOBILE seq=%u profile=%u deadman=%u direction=%u continuous=%u "
               "precision=%u event=%u\n",
               last_sequence, controller_profile, parsed.input.deadman, buffer[4],
@@ -155,6 +217,10 @@ void fail_closed(std::uint8_t error) {
   last_valid_ms = 0;
   neutral_required = true;
   error_code = error;
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+  reset_mapper(to_ms_since_boot(get_absolute_time()));
+  publish_release();
+#endif
   request_status_notification();
 }
 
@@ -170,7 +236,7 @@ void packet_handler(std::uint8_t packet_type, std::uint16_t,
         session.reset();
         notify_enabled = false;
         fail_closed(kErrorNone);
-        std::printf("iPhone BLE connected. Keyboard output is disabled.\n");
+        std::printf("iPhone BLE connected.\n");
       }
       break;
     case HCI_EVENT_DISCONNECTION_COMPLETE:
@@ -203,20 +269,77 @@ void security_handler(std::uint8_t packet_type, std::uint16_t,
 }
 
 void service_timeout(std::uint32_t now_ms) {
-  if (active_direction != 0 && last_valid_ms != 0 &&
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+  const bool output_active = report_has_key(desired_report);
+#else
+  const bool output_active = active_direction != 0;
+#endif
+  if (output_active && last_valid_ms != 0 &&
       now_ms - last_valid_ms > kStaleMs) {
     fail_closed(kErrorStale);
     std::printf("MOBILE stale; released.\n");
   }
 }
 
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+void service_usb_keyboard() {
+  static bool was_mounted{};
+  const bool mounted = red_monkey_mpg_usb_keyboard_mounted();
+  if (mounted != was_mounted) {
+    sent_report = {};
+    neutral_required = true;
+    reset_mapper(to_ms_since_boot(get_absolute_time()));
+    publish_release();
+    was_mounted = mounted;
+    request_status_notification();
+  }
+  if (!mounted || !red_monkey_mpg_usb_keyboard_ready()) {
+    if (error_code == kErrorNone) error_code = kErrorUsbUnavailable;
+    return;
+  }
+  if (error_code == kErrorUsbUnavailable) error_code = kErrorNone;
+  if (desired_report == sent_report) return;
+
+  // Always place an explicit all-keys-up report between two different
+  // non-empty reports. This also prevents an axis/direction transition from
+  // being interpreted as simultaneous motion by the CNC controller.
+  if (report_has_key(sent_report) && report_has_key(desired_report)) {
+    const red_monkey_mpg::KeyboardReport release{};
+    if (red_monkey_mpg_usb_keyboard_send(release.data())) {
+      sent_report = {};
+    } else {
+      neutral_required = true;
+      reset_mapper(to_ms_since_boot(get_absolute_time()));
+      publish_release();
+    }
+    return;
+  }
+
+  if (red_monkey_mpg_usb_keyboard_send(desired_report.data())) {
+    sent_report = desired_report;
+  } else {
+    neutral_required = true;
+    reset_mapper(to_ms_since_boot(get_absolute_time()));
+    publish_release();
+  }
+}
+#endif
+
 }  // namespace
 
 int main() {
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+  watchdog_enable(4000, true);
+#endif
   stdio_init_all();
   sleep_ms(1200);
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+  std::printf("\nRed Monkey MPG mobile production receiver\n");
+  red_monkey_mpg_usb_keyboard_init();
+#else
   std::printf("\nRed Monkey MPG mobile BLE bench\n");
   std::printf("USB keyboard output is not present in this image.\n");
+#endif
 
   if (cyw43_arch_init() != 0) {
     std::printf("ERROR: CYW43 initialization failed.\n");
@@ -245,7 +368,14 @@ int main() {
   hci_power_control(HCI_POWER_ON);
 
   while (true) {
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+    watchdog_update();
+#endif
     cyw43_arch_poll();
+#if RED_MONKEY_MPG_MOBILE_USB_KEYBOARD
+    red_monkey_mpg_usb_keyboard_task();
+    service_usb_keyboard();
+#endif
     service_timeout(to_ms_since_boot(get_absolute_time()));
     sleep_ms(2);
   }

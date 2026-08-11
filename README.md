@@ -40,6 +40,9 @@ powers the Pico and carries USB HID keyboard reports to the CNC controller.
 - [Mobile BLE bench test](docs/MOBILE_BLE_BENCH_TEST.md) — safely exercise the
   Red Monkey CNC Jogger iOS client with a diagnostic UF2 that cannot emit CNC
   keyboard commands.
+- [iPhone receiver MASSO test](docs/MOBILE_RECEIVER_MASSO_TEST.md) — staged
+  computer, motion-disabled, and minimum-speed qualification for the mobile
+  production receiver candidate.
 
 ## Design
 
@@ -86,6 +89,7 @@ scripts/               Controlled release and SBOM tooling
 - [x] Redundant CRC-checked configuration with readback verification
 - [x] Descriptor fingerprint enforcement and reproducible release/SBOM tooling
 - [x] Fail-closed controller-profile registry with Lite 2 D-input profile
+- [x] Separate iPhone BLE-to-USB receiver candidate with the same fixed safety mapper
 - [ ] Production pairing, power-loss, and RF qualification across multiple units
 - [ ] Authorized USB VID/PID and signed-boot manufacturing process
 
@@ -114,6 +118,12 @@ Pairing and mappings persist in redundant, CRC-checked flash records, and every
 receiver exposes a USB serial derived from its Pico chip ID. Follow
 [docs/PRODUCTION_RECEIVER_TEST.md](docs/PRODUCTION_RECEIVER_TEST.md) before
 machine use.
+
+The separate `red_monkey_mpg_mobile_receiver.uf2` image accepts the Red Monkey
+MPG iOS app instead of a Bluetooth gamepad. It is not yet part of the official
+release bundle and must pass the complete
+[iPhone receiver MASSO test](docs/MOBILE_RECEIVER_MASSO_TEST.md) before
+promotion.
 
 ## Principles
 

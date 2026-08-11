@@ -153,12 +153,19 @@ if(RED_MONKEY_MPG_BUILD_HOST_TESTS)
     -UNDEBUG -Wall -Wextra -Wpedantic -Werror)
   add_test(NAME red_monkey_mpg_mobile_protocol_tests COMMAND red_monkey_mpg_mobile_protocol_tests)
 
+  add_executable(red_monkey_mpg_mobile_bridge_tests
+    firmware/tests/mobile_bridge_test.cpp)
+  target_link_libraries(red_monkey_mpg_mobile_bridge_tests PRIVATE red_monkey_mpg_core)
+  target_compile_options(red_monkey_mpg_mobile_bridge_tests PRIVATE
+    -UNDEBUG -Wall -Wextra -Wpedantic -Werror)
+  add_test(NAME red_monkey_mpg_mobile_bridge_tests COMMAND red_monkey_mpg_mobile_bridge_tests)
+
   if(RED_MONKEY_MPG_ENABLE_HOST_SANITIZERS AND
      CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     foreach(target red_monkey_mpg_core red_monkey_mpg_core_tests red_monkey_mpg_controller_profile_tests
                    red_monkey_mpg_safety_properties_tests
                    red_monkey_mpg_config_service_tests red_monkey_mpg_persistent_config_tests
-                   red_monkey_mpg_mobile_protocol_tests)
+                   red_monkey_mpg_mobile_protocol_tests red_monkey_mpg_mobile_bridge_tests)
       target_compile_options(${target} PRIVATE
         -fsanitize=address,undefined -fno-omit-frame-pointer)
       target_link_options(${target} PRIVATE -fsanitize=address,undefined)
@@ -240,7 +247,8 @@ if(RED_MONKEY_MPG_BUILD_PICO)
   target_compile_features(red_monkey_mpg_mobile_ble_bench PRIVATE cxx_std_17)
   target_compile_definitions(red_monkey_mpg_mobile_ble_bench PRIVATE
     CYW43_LWIP=0
-    RED_MONKEY_MPG_ENABLE_MOBILE_BLE=1)
+    RED_MONKEY_MPG_ENABLE_MOBILE_BLE=1
+    RED_MONKEY_MPG_MOBILE_USB_KEYBOARD=0)
   target_link_libraries(red_monkey_mpg_mobile_ble_bench PRIVATE
     pico_stdlib
     pico_cyw43_arch_poll
@@ -253,6 +261,54 @@ if(RED_MONKEY_MPG_BUILD_PICO)
   pico_enable_stdio_usb(red_monkey_mpg_mobile_ble_bench 1)
   pico_enable_stdio_uart(red_monkey_mpg_mobile_ble_bench 0)
   pico_add_extra_outputs(red_monkey_mpg_mobile_ble_bench)
+
+  # iPhone-to-CNC production bridge. This remains a separately flashed image
+  # from the Bluetooth gamepad receiver so either path has a known rollback.
+  # The shared BLE implementation keeps the diagnostic parser and production
+  # parser identical; only this target links the TinyUSB keyboard output.
+  add_executable(red_monkey_mpg_mobile_receiver EXCLUDE_FROM_ALL
+    firmware/diagnostics/mobile_ble_bench.cpp
+    firmware/src/control_mapper.cpp
+    firmware/src/masso_keyboard.cpp
+    firmware/src/mobile_protocol.cpp
+    firmware/usb/usb_keyboard_device.c
+    firmware/usb/usb_descriptors.c
+  )
+  target_include_directories(red_monkey_mpg_mobile_receiver PRIVATE
+    firmware/config firmware/include firmware/usb)
+  target_compile_features(red_monkey_mpg_mobile_receiver PRIVATE cxx_std_17)
+  target_compile_definitions(red_monkey_mpg_mobile_receiver PRIVATE
+    CYW43_LWIP=0
+    RED_MONKEY_MPG_ENABLE_MOBILE_BLE=1
+    RED_MONKEY_MPG_MOBILE_USB_KEYBOARD=1
+    RED_MONKEY_MPG_USB_DYNAMIC_SERIAL=1
+    RED_MONKEY_MPG_USB_PRODUCT="Red Monkey MPG Mobile Receiver"
+    RED_MONKEY_MPG_USB_SERIAL="RED_MONKEY_MPG_MOBILE"
+    RED_MONKEY_MPG_USB_VID=${RED_MONKEY_MPG_USB_VID}
+    RED_MONKEY_MPG_USB_PID=0x4024
+    RED_MONKEY_MPG_USB_BCD_DEVICE=${RED_MONKEY_MPG_USB_BCD_DEVICE}
+  )
+  set_property(SOURCE
+    firmware/diagnostics/mobile_ble_bench.cpp
+    firmware/src/control_mapper.cpp
+    firmware/src/masso_keyboard.cpp
+    firmware/src/mobile_protocol.cpp
+    firmware/usb/usb_keyboard_device.c
+    firmware/usb/usb_descriptors.c
+    APPEND PROPERTY COMPILE_OPTIONS
+    -Wall -Wextra -Wformat=2 -Wshadow -Werror=return-type)
+  target_link_libraries(red_monkey_mpg_mobile_receiver PRIVATE
+    pico_stdlib pico_unique_id pico_cyw43_arch_poll pico_btstack_cyw43
+    pico_btstack_ble pico_btstack_flash_bank tinyusb_device)
+  pico_btstack_make_gatt_header(red_monkey_mpg_mobile_receiver PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/firmware/bluetooth/mobile_jogger.gatt")
+  pico_enable_stdio_usb(red_monkey_mpg_mobile_receiver 0)
+  pico_enable_stdio_uart(red_monkey_mpg_mobile_receiver 0)
+  pico_set_program_version(red_monkey_mpg_mobile_receiver
+                           "${RED_MONKEY_MPG_RELEASE_VERSION}")
+  pico_set_program_description(red_monkey_mpg_mobile_receiver
+                               "Red Monkey MPG iPhone CNC receiver")
+  pico_add_extra_outputs(red_monkey_mpg_mobile_receiver)
 
   # Mac-only USB keyboard commissioning image. It has no Bluetooth input and
   # emits one bounded test sequence after an eight-second delay.

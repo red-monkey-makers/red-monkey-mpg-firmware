@@ -42,6 +42,20 @@ All diagnostic, stub, preview, and commissioning targets are excluded from the
 default build. Build one explicitly only when following its matching test
 document. Never distribute those images as machine firmware.
 
+## iPhone mobile receiver candidate
+
+Build the separate iPhone BLE-to-USB keyboard image with:
+
+```sh
+cmake --build build/pico --target red_monkey_mpg_mobile_receiver
+```
+
+The output is `build/pico/red_monkey_mpg_mobile_receiver.uf2`. It uses the
+MASSO CNC profile and is intentionally separate from the gamepad receiver so a
+known-good image remains available for rollback. Before connecting it to a
+machine, complete every stage in
+[`MOBILE_RECEIVER_MASSO_TEST.md`](MOBILE_RECEIVER_MASSO_TEST.md).
+
 ## Commercial build guards
 
 The default `0xCAFE` USB vendor ID is for development only. A commercial build
