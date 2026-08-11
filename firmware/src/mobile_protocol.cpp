@@ -46,7 +46,9 @@ MobileFrameResult MobileInputSession::consume(const std::uint8_t* data,
   if (mobile_crc8(data, kMobileFrameLength - 1) != data[9]) {
     return reject(MobileFrameError::bad_crc);
   }
-  if (data[8] != 0) return reject(MobileFrameError::nonzero_reserved);
+  if (data[8] != static_cast<std::uint8_t>(MobileControllerProfile::masso)) {
+    return reject(MobileFrameError::unsupported_profile);
+  }
   if ((data[5] & 0xF8u) != 0u) return reject(MobileFrameError::invalid_flags);
   if (data[4] > 6u) return reject(MobileFrameError::invalid_direction);
   if (data[7] > 7u) return reject(MobileFrameError::invalid_event);
@@ -68,6 +70,7 @@ MobileFrameResult MobileInputSession::consume(const std::uint8_t* data,
   MobileFrameResult result{};
   result.accepted = true;
   result.sequence = sequence;
+  result.controller_profile = static_cast<MobileControllerProfile>(data[8]);
   result.input.connected = true;
   result.input.sample_ms = now_ms;
   result.input.deadman = (data[5] & 0x01u) != 0u;

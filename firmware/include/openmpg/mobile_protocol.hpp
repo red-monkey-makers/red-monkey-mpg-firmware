@@ -10,16 +10,20 @@ namespace openmpg {
 constexpr std::size_t kMobileFrameLength = 10;
 constexpr std::uint8_t kMobileProtocolVersion = 1;
 
+enum class MobileControllerProfile : std::uint8_t {
+  masso = 1,
+};
+
 enum class MobileFrameError : std::uint8_t {
   none,
   wrong_length,
   bad_magic,
   bad_version,
   bad_crc,
-  nonzero_reserved,
   invalid_flags,
   invalid_direction,
   invalid_event,
+  unsupported_profile,
   ambiguous_rate,
   replayed_sequence,
 };
@@ -28,6 +32,7 @@ struct MobileFrameResult {
   bool accepted{};
   MobileFrameError error{MobileFrameError::none};
   std::uint16_t sequence{};
+  MobileControllerProfile controller_profile{MobileControllerProfile::masso};
   GamepadState input{};
 };
 

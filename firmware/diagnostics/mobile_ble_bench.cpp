@@ -34,6 +34,8 @@ std::uint32_t last_valid_ms{};
 std::uint8_t active_direction{};
 std::uint8_t resolution{1};
 std::uint8_t error_code{kErrorNone};
+std::uint8_t controller_profile{
+    static_cast<std::uint8_t>(openmpg::MobileControllerProfile::masso)};
 bool notify_enabled{};
 bool neutral_required{true};
 
@@ -56,7 +58,7 @@ std::array<std::uint8_t, openmpg::kMobileFrameLength> status_frame() {
       active_direction,
       resolution,
       error_code,
-      0,
+      controller_profile,
       0,
   };
   bytes.back() = openmpg::mobile_crc8(bytes.data(), bytes.size() - 1);
@@ -116,6 +118,7 @@ int write_callback(hci_con_handle_t, std::uint16_t attribute_handle,
   }
 
   last_sequence = parsed.sequence;
+  controller_profile = static_cast<std::uint8_t>(parsed.controller_profile);
   last_valid_ms = now_ms;
   error_code = kErrorNone;
   active_direction = buffer[4];
@@ -133,9 +136,9 @@ int write_callback(hci_con_handle_t, std::uint16_t attribute_handle,
     neutral_required = true;
   }
 
-  std::printf("MOBILE seq=%u deadman=%u direction=%u continuous=%u "
+  std::printf("MOBILE seq=%u profile=%u deadman=%u direction=%u continuous=%u "
               "precision=%u event=%u\n",
-              last_sequence, parsed.input.deadman, buffer[4],
+              last_sequence, controller_profile, parsed.input.deadman, buffer[4],
               parsed.input.rapid, parsed.input.precision, buffer[7]);
   request_status_notification();
   return 0;

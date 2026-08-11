@@ -11,7 +11,9 @@ protocol without producing USB keyboard reports.
 
 - Advertises the BLE name `RMJogger`.
 - Requires encrypted Bluetooth Low Energy pairing with bonding.
-- Validates packet version, length, reserved fields, ranges, sequence, and CRC.
+- Validates packet version, length, controller profile, ranges, sequence, and CRC.
+- Accepts only a supported CNC controller profile and reports the active profile
+  back to the app. The initial supported profile is MASSO G3 / G3 Touch.
 - Enforces dead-man, one-axis, neutral-before-switch, timeout, and disconnect
   rules while reporting the interpreted state over USB serial.
 - Sets the protocol's diagnostic-mode status bit.

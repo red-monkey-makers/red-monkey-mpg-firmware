@@ -9,7 +9,9 @@ namespace {
 std::array<std::uint8_t, openmpg::kMobileFrameLength> frame(
     std::uint16_t sequence, std::uint8_t direction = 0,
     std::uint8_t flags = 0, std::uint8_t event_sequence = 0,
-    std::uint8_t event = 0) {
+    std::uint8_t event = 0,
+    std::uint8_t profile = static_cast<std::uint8_t>(
+        openmpg::MobileControllerProfile::masso)) {
   std::array<std::uint8_t, openmpg::kMobileFrameLength> bytes{
       0x52,
       openmpg::kMobileProtocolVersion,
@@ -19,7 +21,7 @@ std::array<std::uint8_t, openmpg::kMobileFrameLength> frame(
       flags,
       event_sequence,
       event,
-      0,
+      profile,
       0,
   };
   bytes.back() = openmpg::mobile_crc8(bytes.data(), bytes.size() - 1);
@@ -32,6 +34,7 @@ void test_direction_mapping() {
   const auto result = session.consume(bytes.data(), bytes.size(), 100);
   assert(result.accepted);
   assert(result.sequence == 1);
+  assert(result.controller_profile == openmpg::MobileControllerProfile::masso);
   assert(result.input.connected);
   assert(result.input.deadman);
   assert(result.input.rapid);
@@ -64,6 +67,10 @@ void test_invalid_frames_fail_closed() {
          openmpg::MobileFrameError::invalid_event);
   bytes = frame(1);
   assert(session.consume(bytes.data(), bytes.size(), 1).accepted);
+
+  bytes = frame(2, 0, 0, 0, 0, 0x7F);
+  assert(session.consume(bytes.data(), bytes.size(), 2).error ==
+         openmpg::MobileFrameError::unsupported_profile);
 }
 
 void test_replay_and_wrap_handling() {
