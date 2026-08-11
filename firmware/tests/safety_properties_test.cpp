@@ -1,14 +1,14 @@
-#include "openmpg/control_mapper.hpp"
-#include "openmpg/lite2_report.hpp"
-#include "openmpg/masso_keyboard.hpp"
-#include "openmpg/production_config.hpp"
+#include "red_monkey_mpg/control_mapper.hpp"
+#include "red_monkey_mpg/lite2_report.hpp"
+#include "red_monkey_mpg/masso_keyboard.hpp"
+#include "red_monkey_mpg/production_config.hpp"
 
 #include <array>
 #include <cassert>
 #include <cstdint>
 #include <limits>
 
-using namespace openmpg;
+using namespace red_monkey_mpg;
 
 namespace {
 

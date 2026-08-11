@@ -8,7 +8,7 @@
 
 #include "btstack.h"
 #include "mobile_jogger.h"
-#include "openmpg/mobile_protocol.hpp"
+#include "red_monkey_mpg/mobile_protocol.hpp"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 
@@ -25,7 +25,7 @@ constexpr std::uint8_t kErrorNone = 0;
 constexpr std::uint8_t kErrorMalformed = 1;
 constexpr std::uint8_t kErrorStale = 2;
 
-openmpg::MobileInputSession session{};
+red_monkey_mpg::MobileInputSession session{};
 hci_con_handle_t connection_handle = HCI_CON_HANDLE_INVALID;
 btstack_packet_callback_registration_t hci_callback{};
 btstack_packet_callback_registration_t sm_callback{};
@@ -35,7 +35,7 @@ std::uint8_t active_direction{};
 std::uint8_t resolution{1};
 std::uint8_t error_code{kErrorNone};
 std::uint8_t controller_profile{
-    static_cast<std::uint8_t>(openmpg::MobileControllerProfile::masso)};
+    static_cast<std::uint8_t>(red_monkey_mpg::MobileControllerProfile::masso)};
 bool notify_enabled{};
 bool neutral_required{true};
 
@@ -47,10 +47,10 @@ std::array<std::uint8_t, 31> advertisement{
     0x09, BLUETOOTH_DATA_TYPE_SHORTENED_LOCAL_NAME,
     'R', 'M', 'J', 'o', 'g', 'g', 'e', 'r'};
 
-std::array<std::uint8_t, openmpg::kMobileFrameLength> status_frame() {
-  std::array<std::uint8_t, openmpg::kMobileFrameLength> bytes{
+std::array<std::uint8_t, red_monkey_mpg::kMobileFrameLength> status_frame() {
+  std::array<std::uint8_t, red_monkey_mpg::kMobileFrameLength> bytes{
       0x53,
-      openmpg::kMobileProtocolVersion,
+      red_monkey_mpg::kMobileProtocolVersion,
       static_cast<std::uint8_t>(last_sequence),
       static_cast<std::uint8_t>(last_sequence >> 8u),
       static_cast<std::uint8_t>(kStatusBluetoothReady | kStatusDiagnostic |
@@ -61,7 +61,7 @@ std::array<std::uint8_t, openmpg::kMobileFrameLength> status_frame() {
       controller_profile,
       0,
   };
-  bytes.back() = openmpg::mobile_crc8(bytes.data(), bytes.size() - 1);
+  bytes.back() = red_monkey_mpg::mobile_crc8(bytes.data(), bytes.size() - 1);
   return bytes;
 }
 

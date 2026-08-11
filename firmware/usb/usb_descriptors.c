@@ -2,30 +2,30 @@
 #include <string.h>
 
 #include "tusb.h"
-#if OPENMPG_USB_DYNAMIC_SERIAL
+#if RED_MONKEY_MPG_USB_DYNAMIC_SERIAL
 #include "pico/unique_id.h"
 #endif
 
-#ifndef OPENMPG_USB_PRODUCT
-#define OPENMPG_USB_PRODUCT "Red Monkey MPG Keyboard Bench Test"
+#ifndef RED_MONKEY_MPG_USB_PRODUCT
+#define RED_MONKEY_MPG_USB_PRODUCT "Red Monkey MPG Keyboard Bench Test"
 #endif
-#ifndef OPENMPG_USB_SERIAL
-#define OPENMPG_USB_SERIAL "BENCH-0001"
+#ifndef RED_MONKEY_MPG_USB_SERIAL
+#define RED_MONKEY_MPG_USB_SERIAL "BENCH-0001"
 #endif
-#ifndef OPENMPG_USB_PID
-#define OPENMPG_USB_PID 0x4010
+#ifndef RED_MONKEY_MPG_USB_PID
+#define RED_MONKEY_MPG_USB_PID 0x4010
 #endif
-#ifndef OPENMPG_USB_VID
+#ifndef RED_MONKEY_MPG_USB_VID
 // Development only. A commercial build must supply an authorized USB VID.
-#define OPENMPG_USB_VID 0xCAFE
+#define RED_MONKEY_MPG_USB_VID 0xCAFE
 #endif
-#ifndef OPENMPG_USB_BCD_DEVICE
-#define OPENMPG_USB_BCD_DEVICE 0x0001
+#ifndef RED_MONKEY_MPG_USB_BCD_DEVICE
+#define RED_MONKEY_MPG_USB_BCD_DEVICE 0x0001
 #endif
 
 enum {
   ITF_NUM_KEYBOARD,
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
   ITF_NUM_CDC,
   ITF_NUM_CDC_DATA,
 #endif
@@ -36,7 +36,7 @@ static tusb_desc_device_t const kDeviceDescriptor = {
     .bLength = sizeof(tusb_desc_device_t),
     .bDescriptorType = TUSB_DESC_DEVICE,
     .bcdUSB = 0x0200,
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
     .bDeviceClass = TUSB_CLASS_MISC,
     .bDeviceSubClass = MISC_SUBCLASS_COMMON,
     .bDeviceProtocol = MISC_PROTOCOL_IAD,
@@ -46,9 +46,9 @@ static tusb_desc_device_t const kDeviceDescriptor = {
     .bDeviceProtocol = 0x00,
 #endif
     .bMaxPacketSize0 = CFG_TUD_ENDPOINT0_SIZE,
-    .idVendor = OPENMPG_USB_VID,
-    .idProduct = OPENMPG_USB_PID,
-    .bcdDevice = OPENMPG_USB_BCD_DEVICE,
+    .idVendor = RED_MONKEY_MPG_USB_VID,
+    .idProduct = RED_MONKEY_MPG_USB_PID,
+    .bcdDevice = RED_MONKEY_MPG_USB_BCD_DEVICE,
     .iManufacturer = 0x01,
     .iProduct = 0x02,
     .iSerialNumber = 0x03,
@@ -68,7 +68,7 @@ uint8_t const* tud_hid_descriptor_report_cb(uint8_t instance) {
   return kKeyboardReportDescriptor;
 }
 
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
 #define CONFIG_TOTAL_LEN \
   (TUD_CONFIG_DESC_LEN + TUD_HID_DESC_LEN + TUD_CDC_DESC_LEN)
 #else
@@ -82,7 +82,7 @@ static uint8_t const kConfigurationDescriptor[] = {
     TUD_HID_DESCRIPTOR(ITF_NUM_KEYBOARD, 0, HID_ITF_PROTOCOL_KEYBOARD,
                        sizeof(kKeyboardReportDescriptor), 0x81,
                        CFG_TUD_HID_EP_BUFSIZE, 10),
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
     TUD_CDC_DESCRIPTOR(ITF_NUM_CDC, 0, 0x82, 8, 0x03, 0x83,
                        CFG_TUD_CDC_EP_BUFSIZE),
 #endif
@@ -96,8 +96,8 @@ uint8_t const* tud_descriptor_configuration_cb(uint8_t index) {
 static char const* const kStringDescriptors[] = {
     (char const[]){0x09, 0x04},
     "Red Monkey MPG",
-    OPENMPG_USB_PRODUCT,
-    OPENMPG_USB_SERIAL,
+    RED_MONKEY_MPG_USB_PRODUCT,
+    RED_MONKEY_MPG_USB_SERIAL,
 };
 
 static uint16_t string_buffer[32];
@@ -113,7 +113,7 @@ uint16_t const* tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
       return NULL;
     }
     char const* source = kStringDescriptors[index];
-#if OPENMPG_USB_DYNAMIC_SERIAL
+#if RED_MONKEY_MPG_USB_DYNAMIC_SERIAL
     static char unique_serial[2 * PICO_UNIQUE_BOARD_ID_SIZE_BYTES + 1];
     if (index == 3) {
       if (unique_serial[0] == '\0') {

@@ -5,17 +5,17 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "openmpg/masso_keyboard.hpp"
+#include "red_monkey_mpg/masso_keyboard.hpp"
 #include "pico/stdlib.h"
 #include "tusb.h"
 
 namespace {
 
-using openmpg::Axis;
-using openmpg::Direction;
-using openmpg::JogCommand;
-using openmpg::JogRate;
-using openmpg::OutputFrame;
+using red_monkey_mpg::Axis;
+using red_monkey_mpg::Direction;
+using red_monkey_mpg::JogCommand;
+using red_monkey_mpg::JogRate;
+using red_monkey_mpg::OutputFrame;
 
 constexpr std::uint32_t kStartupDelayMs = 8000;
 constexpr std::uint32_t kReportIntervalMs = 600;
@@ -56,7 +56,7 @@ void run_bounded_test(std::uint32_t now_ms) {
   frame.release_all = false;
   frame.has_jog = true;
   frame.jog = kSequence[command_index];
-  const auto report = openmpg::masso_g3_keyboard_report(frame);
+  const auto report = red_monkey_mpg::masso_g3_keyboard_report(frame);
   tud_hid_keyboard_report(0, report[0], report.data() + 2);
   key_is_down = true;
 }

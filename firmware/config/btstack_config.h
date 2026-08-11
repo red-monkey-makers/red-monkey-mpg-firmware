@@ -1,5 +1,5 @@
-#ifndef OPENMPG_BTSTACK_CONFIG_H
-#define OPENMPG_BTSTACK_CONFIG_H
+#ifndef RED_MONKEY_MPG_BTSTACK_CONFIG_H
+#define RED_MONKEY_MPG_BTSTACK_CONFIG_H
 
 // The Pico SDK always compiles BTstack's stdout dump backend, which requires
 // the formatting helper even when no dump backend is initialized. Production
@@ -7,13 +7,13 @@
 // logging itself out of production builds.
 #define ENABLE_LOG_ERROR
 #define ENABLE_PRINTF_HEXDUMP
-#ifndef OPENMPG_PRODUCTION_BUILD
+#ifndef RED_MONKEY_MPG_PRODUCTION_BUILD
 #define ENABLE_LOG_INFO
 #endif
 
 // Mobile-client bench support is target-local so BLE-only configuration cannot
 // alter the production Bluetooth Classic receiver's BTstack data structures.
-#ifdef OPENMPG_ENABLE_MOBILE_BLE
+#ifdef RED_MONKEY_MPG_ENABLE_MOBILE_BLE
 #define ENABLE_LE_PERIPHERAL
 #define ENABLE_LE_SECURE_CONNECTIONS
 #define ENABLE_MICRO_ECC_FOR_LE_SECURE_CONNECTIONS

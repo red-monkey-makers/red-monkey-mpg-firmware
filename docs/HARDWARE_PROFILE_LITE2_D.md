@@ -55,14 +55,14 @@ only the four cardinal values above. Diagonal values will produce no action.
 
 ## Production descriptor capture
 
-Flash the current `openmpg_hid_dump.uf2`, reconnect the Lite 2 in D mode, and
+Flash the current `red_monkey_mpg_hid_dump.uf2`, reconnect the Lite 2 in D mode, and
 record the complete `DESCRIPTOR_SHA256` and `DESCRIPTOR_BYTES` lines. Verify
 the SHA-256 independently from the captured bytes, then repeat on controllers
 from each hardware/firmware revision intended for sale. Do not approve a hash
 based only on the 83-byte length.
 
 After the report semantics and safety regression pass, supply the approved
-hash as `OPENMPG_LITE2_DESCRIPTOR_SHA256`. A commercial build refuses to
+hash as `RED_MONKEY_MPG_LITE2_DESCRIPTOR_SHA256`. A commercial build refuses to
 configure without it, and the receiver rejects a nonmatching controller before
 accepting reports.
 

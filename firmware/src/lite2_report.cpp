@@ -1,11 +1,11 @@
-#include "openmpg/lite2_report.hpp"
+#include "red_monkey_mpg/lite2_report.hpp"
 
 #include <algorithm>
 #include <cstring>
 
-#include "openmpg/controller_profile.hpp"
+#include "red_monkey_mpg/controller_profile.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 std::int16_t Lite2ReportParser::normalize(std::uint8_t raw, int center) {
   const int scaled = (static_cast<int>(raw) - center) * 256;
@@ -85,4 +85,4 @@ const ControllerProfile& lite2_d_profile() {
   return profile;
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

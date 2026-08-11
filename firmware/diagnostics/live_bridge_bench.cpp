@@ -9,14 +9,14 @@
 
 #include "btstack.h"
 #include "hardware/watchdog.h"
-#include "openmpg/control_mapper.hpp"
-#include "openmpg/controller_profile.hpp"
-#include "openmpg/descriptor_identity.h"
-#include "openmpg/masso_keyboard.hpp"
-#if OPENMPG_ENABLE_CONFIG_CDC
-#include "openmpg/config_service.hpp"
-#include "openmpg/persistent_config.hpp"
-#include "openmpg/production_config.hpp"
+#include "red_monkey_mpg/control_mapper.hpp"
+#include "red_monkey_mpg/controller_profile.hpp"
+#include "red_monkey_mpg/descriptor_identity.h"
+#include "red_monkey_mpg/masso_keyboard.hpp"
+#include "red_monkey_mpg/production_config.hpp"
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
+#include "red_monkey_mpg/config_service.hpp"
+#include "red_monkey_mpg/persistent_config.hpp"
 #include "pico/unique_id.h"
 #endif
 #include "pico/cyw43_arch.h"
@@ -24,13 +24,13 @@
 #include "pico/sync.h"
 #include "usb_keyboard_device.h"
 
-#ifndef OPENMPG_CONTROLLER_ADDRESS
-#error OPENMPG_CONTROLLER_ADDRESS must be supplied by CMake
+#ifndef RED_MONKEY_MPG_CONTROLLER_ADDRESS
+#error RED_MONKEY_MPG_CONTROLLER_ADDRESS must be supplied by CMake
 #endif
-#ifndef OPENMPG_LITE2_DESCRIPTOR_SHA256
-#define OPENMPG_LITE2_DESCRIPTOR_SHA256 ""
+#ifndef RED_MONKEY_MPG_LITE2_DESCRIPTOR_SHA256
+#define RED_MONKEY_MPG_LITE2_DESCRIPTOR_SHA256 ""
 #endif
-#if OPENMPG_ENABLE_CONFIG_CDC && !defined(OPENMPG_POLL_BTSTACK)
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC && !defined(RED_MONKEY_MPG_POLL_BTSTACK)
 #error Configurable receivers require single-threaded polled BTstack servicing
 #endif
 
@@ -47,7 +47,7 @@ std::uint16_t hid_cid{};
 std::uint16_t last_hid_cid{};
 btstack_packet_callback_registration_t hci_callback{};
 btstack_timer_source_t reconnect_timer{};
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
 btstack_timer_source_t pairing_scan_timer{};
 #endif
 std::atomic_bool descriptor_ready{};
@@ -56,27 +56,27 @@ std::atomic_bool controller_address_valid{};
 std::atomic_bool rearm_required{true};
 std::atomic_uint32_t last_valid_report_ms{};
 
-const openmpg::ControllerProfile* active_profile{};
-openmpg::ControlMapper mapper{};
+const red_monkey_mpg::ControllerProfile* active_profile{};
+red_monkey_mpg::ControlMapper mapper{};
+red_monkey_mpg::ProductionMapping production_mapping{};
+char active_controller_name[64]{};
+std::uint32_t active_controller_device_class{};
 
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
 void start_pairing_scan();
 bool select_pairing_candidate(const char* address);
 bool confirm_pairing_candidate();
 void cancel_pairing();
 
-openmpg::ProductionMapping production_mapping{};
-openmpg::PersistentConfig persistent_config{};
-openmpg::ConfigService config_service{
+red_monkey_mpg::PersistentConfig persistent_config{};
+red_monkey_mpg::ConfigService config_service{
     production_mapping, persistent_config,
     {start_pairing_scan, select_pairing_candidate, confirm_pairing_candidate,
      cancel_pairing}};
 char receiver_serial[2 * PICO_UNIQUE_BOARD_ID_SIZE_BYTES + 1]{};
 char active_controller_address[18]{};
 char candidate_controller_address[18]{};
-char active_controller_name[64]{};
 char candidate_controller_name[64]{};
-std::uint32_t active_controller_device_class{};
 std::uint32_t candidate_controller_device_class{};
 std::atomic_bool pairing_scan_active{};
 std::atomic_bool pairing_scan_requested{};
@@ -90,7 +90,7 @@ critical_section_t report_lock{};
 std::array<std::uint8_t, 8> desired_report{};
 std::array<std::uint8_t, 8> sent_report{};
 
-void publish_report(const openmpg::KeyboardReport& report) {
+void publish_report(const red_monkey_mpg::KeyboardReport& report) {
   critical_section_enter_blocking(&report_lock);
   desired_report = report;
   critical_section_exit(&report_lock);
@@ -98,15 +98,15 @@ void publish_report(const openmpg::KeyboardReport& report) {
 
 void publish_release() { publish_report({}); }
 
-openmpg::KeyboardReport read_desired_report() {
-  openmpg::KeyboardReport copy{};
+red_monkey_mpg::KeyboardReport read_desired_report() {
+  red_monkey_mpg::KeyboardReport copy{};
   critical_section_enter_blocking(&report_lock);
   copy = desired_report;
   critical_section_exit(&report_lock);
   return copy;
 }
 
-bool report_has_key(const openmpg::KeyboardReport& report) {
+bool report_has_key(const red_monkey_mpg::KeyboardReport& report) {
   for (const auto byte : report) {
     if (byte != 0) return true;
   }
@@ -114,12 +114,12 @@ bool report_has_key(const openmpg::KeyboardReport& report) {
 }
 
 void reset_mapper(std::uint32_t now_ms) {
-  openmpg::GamepadState disconnected{};
+  red_monkey_mpg::GamepadState disconnected{};
   disconnected.sample_ms = now_ms;
   (void)mapper.update(disconnected, now_ms);
 }
 
-bool controls_are_safe_to_arm(const openmpg::GamepadState& input) {
+bool controls_are_safe_to_arm(const red_monkey_mpg::GamepadState& input) {
   const auto magnitude = [](std::int16_t value) {
     return value < 0 ? -static_cast<int>(value) : static_cast<int>(value);
   };
@@ -131,7 +131,7 @@ bool controls_are_safe_to_arm(const openmpg::GamepadState& input) {
 void consume_controller_report(const std::uint8_t* report,
                                std::uint16_t length,
                                std::uint32_t now_ms) {
-  openmpg::GamepadState input{};
+  red_monkey_mpg::GamepadState input{};
   if (!descriptor_ready.load() || active_profile == nullptr ||
       !active_profile->parse_report(report, length, now_ms, input)) {
     rearm_required = true;
@@ -141,8 +141,8 @@ void consume_controller_report(const std::uint8_t* report,
     return;
   }
 
-#if OPENMPG_ENABLE_CONFIG_CDC
-  input = openmpg::apply_production_mapping(input, production_mapping);
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
+  input = red_monkey_mpg::apply_production_mapping(input, production_mapping);
   if (pairing_candidate_selected.load()) {
     if (config_service.active()) {
       constexpr std::uint32_t kConfirmationChord =
@@ -180,13 +180,13 @@ void consume_controller_report(const std::uint8_t* report,
     return;
   }
 
-  publish_report(openmpg::cnc_controller_keyboard_report(
+  publish_report(red_monkey_mpg::cnc_controller_keyboard_report(
       production_mapping.cnc_profile, mapper.update(input, now_ms)));
 }
 
 void schedule_connect(std::uint32_t delay_ms);
 
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
 void begin_pairing_scan(btstack_timer_source_t* timer) {
   (void)timer;
   if (!pairing_scan_requested.load()) return;
@@ -253,7 +253,7 @@ void packet_handler(std::uint8_t packet_type, std::uint16_t channel,
 
   bd_addr_t event_address{};
   switch (hci_event_packet_get_type(packet)) {
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
     case GAP_EVENT_INQUIRY_RESULT: {
       if (!pairing_scan_active.load()) break;
 
@@ -314,7 +314,7 @@ void packet_handler(std::uint8_t packet_type, std::uint16_t channel,
 
     case HCI_EVENT_USER_CONFIRMATION_REQUEST:
       hci_event_user_confirmation_request_get_bd_addr(packet, event_address);
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
       // A missing/corrupt link key must never silently turn a normal reconnect
       // into a new bond. Only the controller selected during an active, local
       // setup session may enter SSP; every other request is rejected.
@@ -382,39 +382,39 @@ void packet_handler(std::uint8_t packet_type, std::uint16_t channel,
               hid_descriptor_storage_get_descriptor_len(hid_cid);
           const std::uint8_t* descriptor =
               hid_descriptor_storage_get_descriptor_data(hid_cid);
-          const openmpg::ControllerProbe probe{
-              openmpg::ControllerTransport::bluetooth_classic_hid,
+          const red_monkey_mpg::ControllerProbe probe{
+              red_monkey_mpg::ControllerTransport::bluetooth_classic_hid,
               active_controller_name[0] != '\0' ? active_controller_name
                                                   : nullptr,
               active_controller_device_class,
               descriptor,
               descriptor_length};
           const auto selection =
-              openmpg::builtin_controller_profiles().select(probe);
+              red_monkey_mpg::builtin_controller_profiles().select(probe);
           bool descriptor_supported =
               hid_subevent_descriptor_available_get_status(packet) ==
                   ERROR_CODE_SUCCESS &&
-              selection.status == openmpg::ProfileSelectionStatus::matched;
-#if OPENMPG_ENABLE_CONFIG_CDC
-          if (descriptor_supported && OPENMPG_LITE2_DESCRIPTOR_SHA256[0] != '\0') {
-            descriptor_supported = openmpg_descriptor_matches_sha256(
+              selection.status == red_monkey_mpg::ProfileSelectionStatus::matched;
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
+          if (descriptor_supported && RED_MONKEY_MPG_LITE2_DESCRIPTOR_SHA256[0] != '\0') {
+            descriptor_supported = red_monkey_mpg_descriptor_matches_sha256(
                 descriptor, descriptor_length,
-                OPENMPG_LITE2_DESCRIPTOR_SHA256);
+                RED_MONKEY_MPG_LITE2_DESCRIPTOR_SHA256);
           }
 #endif
           active_profile = descriptor_supported ? selection.profile : nullptr;
           descriptor_ready = descriptor_supported;
           if (descriptor_supported) {
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
             config_service.set_identity(receiver_serial,
-                                        OPENMPG_FIRMWARE_VERSION,
+                                        RED_MONKEY_MPG_FIRMWARE_VERSION,
                                         active_profile->display_name,
                                         active_controller_address);
 #endif
           }
           if (!descriptor_supported) {
             fail_closed();
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
             if (pairing_candidate_selected.load()) {
               config_service.emit_pairing_state("unsupported_hid_descriptor");
               // Roll the entire pairing transaction back. Merely clearing the
@@ -442,7 +442,7 @@ void packet_handler(std::uint8_t packet_type, std::uint16_t channel,
           hid_cid = 0;
           last_hid_cid = 0;
           fail_closed();
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
           if (pairing_scan_requested.load() || pairing_scan_active.load()) {
             break;
           }
@@ -475,21 +475,21 @@ void service_stale_input(std::uint32_t now_ms) {
 
 void service_usb_keyboard() {
   static bool was_mounted = false;
-  const bool mounted = openmpg_usb_keyboard_mounted();
+  const bool mounted = red_monkey_mpg_usb_keyboard_mounted();
   if (mounted != was_mounted) {
     sent_report = {};
     rearm_required = true;
     publish_release();
     was_mounted = mounted;
   }
-  if (!mounted || !openmpg_usb_keyboard_ready()) return;
+  if (!mounted || !red_monkey_mpg_usb_keyboard_ready()) return;
   const auto desired = read_desired_report();
   if (desired == sent_report) return;
 
   // Put an explicit all-keys-up frame between two different non-empty reports.
   if (report_has_key(sent_report) && report_has_key(desired)) {
-    const openmpg::KeyboardReport release{};
-    if (openmpg_usb_keyboard_send(release.data())) {
+    const red_monkey_mpg::KeyboardReport release{};
+    if (red_monkey_mpg_usb_keyboard_send(release.data())) {
       sent_report = {};
     } else {
       // Never retry a motion transition after an unexplained HID enqueue
@@ -501,7 +501,7 @@ void service_usb_keyboard() {
     return;
   }
 
-  if (openmpg_usb_keyboard_send(desired.data())) {
+  if (red_monkey_mpg_usb_keyboard_send(desired.data())) {
     sent_report = desired;
   } else {
     rearm_required = true;
@@ -521,7 +521,7 @@ void service_led(std::uint32_t now_ms) {
   cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
 }
 
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
 void start_pairing_scan() {
   // Restarting a scan is also a rollback boundary. Without this, starting a
   // second scan after selecting (but not committing) a controller could leave
@@ -613,7 +613,7 @@ bool confirm_pairing_candidate() {
   pairing_candidate_selected = false;
   pairing_chord_confirmed = false;
   pairing_chord_started_ms = 0;
-  config_service.set_identity(receiver_serial, OPENMPG_FIRMWARE_VERSION,
+  config_service.set_identity(receiver_serial, RED_MONKEY_MPG_FIRMWARE_VERSION,
                               active_profile != nullptr
                                   ? active_profile->display_name
                                   : "Compatible controller",
@@ -645,7 +645,7 @@ void cancel_pairing() {
       gap_drop_link_key_for_bd_addr(rejected);
     }
   }
-  const char* fallback = stored != nullptr ? stored : OPENMPG_CONTROLLER_ADDRESS;
+  const char* fallback = stored != nullptr ? stored : RED_MONKEY_MPG_CONTROLLER_ADDRESS;
   std::snprintf(active_controller_address, sizeof(active_controller_address),
                 "%s", fallback);
   active_controller_name[0] = '\0';
@@ -665,12 +665,12 @@ int main() {
   // key indefinitely. Four seconds leaves ample margin for flash commits.
   watchdog_enable(4000, true);
   critical_section_init(&report_lock);
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
   controller_address_valid =
-      sscanf_bd_addr(OPENMPG_CONTROLLER_ADDRESS, controller_address);
+      sscanf_bd_addr(RED_MONKEY_MPG_CONTROLLER_ADDRESS, controller_address);
 #else
   controller_address_valid =
-      sscanf_bd_addr(OPENMPG_CONTROLLER_ADDRESS, controller_address);
+      sscanf_bd_addr(RED_MONKEY_MPG_CONTROLLER_ADDRESS, controller_address);
   if (!controller_address_valid.load()) {
     while (true) tight_loop_contents();
   }
@@ -679,24 +679,24 @@ int main() {
     while (true) tight_loop_contents();
   }
 
-#if OPENMPG_ENABLE_CONFIG_CDC
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
   pico_get_unique_board_id_string(receiver_serial, sizeof(receiver_serial));
   (void)persistent_config.load(production_mapping);
   const char* stored_address = persistent_config.controller_address();
   const char* boot_address =
-      stored_address != nullptr ? stored_address : OPENMPG_CONTROLLER_ADDRESS;
+      stored_address != nullptr ? stored_address : RED_MONKEY_MPG_CONTROLLER_ADDRESS;
   std::snprintf(active_controller_address, sizeof(active_controller_address),
                 "%s", boot_address);
   controller_address_valid =
       sscanf_bd_addr(active_controller_address, controller_address);
-  config_service.set_identity(receiver_serial, OPENMPG_FIRMWARE_VERSION,
+  config_service.set_identity(receiver_serial, RED_MONKEY_MPG_FIRMWARE_VERSION,
                               stored_address != nullptr
                                   ? "8BitDo Lite 2 · D mode"
                                   : nullptr,
                               stored_address);
 #endif
 
-  openmpg_usb_keyboard_init();
+  red_monkey_mpg_usb_keyboard_init();
 
   l2cap_init();
   // HID L2CAP services require an encrypted link. Lite 2 Just Works cannot
@@ -718,13 +718,13 @@ int main() {
 
   while (true) {
     watchdog_update();
-#if defined(OPENMPG_POLL_BTSTACK)
+#if defined(RED_MONKEY_MPG_POLL_BTSTACK)
     // Keep Bluetooth callbacks, TinyUSB, configuration parsing, flash state,
     // and mapping updates on this one deterministic main-loop context.
     cyw43_arch_poll();
 #endif
-    openmpg_usb_keyboard_task();
-#if OPENMPG_ENABLE_CONFIG_CDC
+    red_monkey_mpg_usb_keyboard_task();
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
     static bool config_was_active = false;
     config_service.service();
     if (config_service.active()) {

@@ -1,8 +1,8 @@
-#include "openmpg/masso_keyboard.hpp"
+#include "red_monkey_mpg/masso_keyboard.hpp"
 
 #include <cstring>
 
-namespace openmpg {
+namespace red_monkey_mpg {
 namespace {
 
 constexpr std::uint8_t kLeftShift = 0x02;
@@ -109,4 +109,4 @@ KeyboardReport masso_g3_keyboard_report(const OutputFrame& frame) {
   return report;
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

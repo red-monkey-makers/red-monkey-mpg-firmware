@@ -1,4 +1,4 @@
-#include "openmpg/persistent_config.hpp"
+#include "red_monkey_mpg/persistent_config.hpp"
 
 #include <array>
 #include <cstdio>
@@ -6,7 +6,7 @@
 
 #include "btstack_tlv.h"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 namespace {
 
 constexpr std::uint32_t kTagA = 0x4f4d5041;  // OMPA
@@ -221,4 +221,4 @@ bool PersistentConfig::store_controller_address(const ProductionMapping& mapping
   return false;
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

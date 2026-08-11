@@ -26,9 +26,9 @@ jobs:
       - name: Configure
         run: >-
           cmake -S . -B build/host -G Ninja
-          -DOPENMPG_BUILD_PICO=OFF
-          -DOPENMPG_BUILD_HOST_TESTS=ON
-          -DOPENMPG_ENABLE_HOST_SANITIZERS=${{ matrix.sanitizers }}
+          -DRED_MONKEY_MPG_BUILD_PICO=OFF
+          -DRED_MONKEY_MPG_BUILD_HOST_TESTS=ON
+          -DRED_MONKEY_MPG_ENABLE_HOST_SANITIZERS=${{ matrix.sanitizers }}
           -DCMAKE_BUILD_TYPE=Debug
       - name: Build
         run: cmake --build build/host
@@ -56,15 +56,15 @@ jobs:
           cmake -S . -B build/pico -G Ninja
           -DPICO_SDK_PATH="$RUNNER_TEMP/pico-sdk"
           -DPICO_BOARD=pico2_w
-          -DOPENMPG_BUILD_HOST_TESTS=OFF
-          -DOPENMPG_BUILD_PICO=ON
+          -DRED_MONKEY_MPG_BUILD_HOST_TESTS=OFF
+          -DRED_MONKEY_MPG_BUILD_PICO=ON
           -DCMAKE_BUILD_TYPE=Release
       - name: Build receiver
-        run: cmake --build build/pico --target openmpg_production_receiver
+        run: cmake --build build/pico --target red_monkey_mpg_production_receiver
       - name: Upload development artifact
         uses: actions/upload-artifact@v7
         with:
           name: red-monkey-mpg-pico2w-development-uf2
-          path: build/pico/openmpg_production_receiver.uf2
+          path: build/pico/red_monkey_mpg_production_receiver.uf2
           if-no-files-found: error
           retention-days: 14

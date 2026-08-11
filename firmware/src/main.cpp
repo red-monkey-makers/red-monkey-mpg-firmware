@@ -1,15 +1,15 @@
-#include "openmpg/control_mapper.hpp"
-#include "openmpg/platform.hpp"
+#include "red_monkey_mpg/control_mapper.hpp"
+#include "red_monkey_mpg/platform.hpp"
 
 #include "pico/stdlib.h"
 
 int main() {
-  openmpg::platform::initialize();
-  openmpg::ControlMapper mapper{};
+  red_monkey_mpg::platform::initialize();
+  red_monkey_mpg::ControlMapper mapper{};
   while (true) {
-    const auto now = openmpg::platform::milliseconds();
-    const auto input = openmpg::platform::poll_gamepad();
-    openmpg::platform::send_keyboard_output(mapper.update(input, now));
+    const auto now = red_monkey_mpg::platform::milliseconds();
+    const auto input = red_monkey_mpg::platform::poll_gamepad();
+    red_monkey_mpg::platform::send_keyboard_output(mapper.update(input, now));
     sleep_ms(5);
   }
 }

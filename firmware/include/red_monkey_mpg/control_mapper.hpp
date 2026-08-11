@@ -2,9 +2,9 @@
 
 #include <optional>
 
-#include "openmpg/types.hpp"
+#include "red_monkey_mpg/types.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 struct MapperConfig {
   std::int16_t deadzone{9000};
@@ -25,4 +25,4 @@ class ControlMapper {
   StepResolution next_resolution_{StepResolution::mm_0_01};
 };
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

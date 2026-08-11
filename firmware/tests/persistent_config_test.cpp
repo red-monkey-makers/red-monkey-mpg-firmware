@@ -1,4 +1,4 @@
-#include "openmpg/persistent_config.hpp"
+#include "red_monkey_mpg/persistent_config.hpp"
 
 #include <array>
 #include <cassert>
@@ -78,7 +78,7 @@ extern "C" void btstack_tlv_get_instance(
 }
 
 int main() {
-  using namespace openmpg;
+  using namespace red_monkey_mpg;
   ProductionMapping mapping{};
   PersistentConfig storage{};
   assert(!storage.load(mapping));

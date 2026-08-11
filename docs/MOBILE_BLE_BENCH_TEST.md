@@ -1,6 +1,6 @@
 # Red Monkey CNC Jogger: motion-safe BLE bench test
 
-The `openmpg_mobile_ble_bench` target lets you test the iOS client and Pico BLE
+The `red_monkey_mpg_mobile_ble_bench` target lets you test the iOS client and Pico BLE
 protocol without producing USB keyboard reports.
 
 > **Do not connect this diagnostic firmware to a CNC controller or machine.**
@@ -29,18 +29,18 @@ From the firmware repository root:
 
 ```sh
 cmake -S . -B build-mobile-pico \
-  -DOPENMPG_BUILD_PICO=ON \
-  -DOPENMPG_BUILD_HOST_TESTS=OFF
+  -DRED_MONKEY_MPG_BUILD_PICO=ON \
+  -DRED_MONKEY_MPG_BUILD_HOST_TESTS=OFF
 cmake --build build-mobile-pico \
-  --target openmpg_mobile_ble_bench --parallel
+  --target red_monkey_mpg_mobile_ble_bench --parallel
 ```
 
-The UF2 is `build-mobile-pico/openmpg_mobile_ble_bench.uf2`.
+The UF2 is `build-mobile-pico/red_monkey_mpg_mobile_ble_bench.uf2`.
 
 1. Disconnect the Pico from every CNC controller.
 2. Hold **BOOTSEL** while plugging the Pico into the computer.
 3. Release BOOTSEL after the `RP2350` volume appears.
-4. Copy `openmpg_mobile_ble_bench.uf2` to that volume.
+4. Copy `red_monkey_mpg_mobile_ble_bench.uf2` to that volume.
 5. Wait for the Pico to reboot.
 
 ## Observe the receiver

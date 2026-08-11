@@ -11,7 +11,7 @@ This procedure applies only to:
 - MASSO software version 5.13, released 1 November 2025
 - The commissioned 8BitDo Lite 2 in D mode
 - Controller address (example: `00:00:5E:00:53:01`; use your own unit's address)
-- `openmpg_masso_g3_513_commissioning.uf2`
+- `red_monkey_mpg_masso_g3_513_commissioning.uf2`
 
 The firmware can issue real machine-motion commands. It is not a substitute for
 a hard-wired E-stop, machine guarding, limits, or normal operator training.

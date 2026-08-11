@@ -4,9 +4,9 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "openmpg/types.hpp"
+#include "red_monkey_mpg/types.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 // A boot-protocol keyboard report: modifier, reserved, then six key usages.
 using KeyboardReport = std::array<std::uint8_t, 8>;
@@ -40,4 +40,4 @@ KeyboardReport cnc_controller_keyboard_report(CncControllerProfileId id,
 // profile translator and for compatibility with existing diagnostics.
 KeyboardReport masso_g3_keyboard_report(const OutputFrame& frame);
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

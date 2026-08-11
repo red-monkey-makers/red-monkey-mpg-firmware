@@ -3,9 +3,9 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "openmpg/types.hpp"
+#include "red_monkey_mpg/types.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 enum class ControllerTransport : std::uint8_t {
   bluetooth_classic_hid,
@@ -83,4 +83,4 @@ class ControllerProfileRegistry {
 bool profile_supports_safe_motion(const ControllerProfile& profile);
 const ControllerProfileRegistry& builtin_controller_profiles();
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

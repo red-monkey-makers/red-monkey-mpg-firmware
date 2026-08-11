@@ -1,4 +1,4 @@
-#include "openmpg/config_service.hpp"
+#include "red_monkey_mpg/config_service.hpp"
 
 #include <cassert>
 #include <cstdint>
@@ -27,13 +27,13 @@ void clear_output() { usb_output.clear(); }
 
 extern "C" {
 
-bool openmpg_usb_config_connected(void) { return usb_connected; }
+bool red_monkey_mpg_usb_config_connected(void) { return usb_connected; }
 
-std::uint32_t openmpg_usb_config_available(void) {
+std::uint32_t red_monkey_mpg_usb_config_available(void) {
   return static_cast<std::uint32_t>(usb_input.size() - usb_input_offset);
 }
 
-std::uint32_t openmpg_usb_config_read(void* buffer, std::uint32_t length) {
+std::uint32_t red_monkey_mpg_usb_config_read(void* buffer, std::uint32_t length) {
   const std::size_t available = usb_input.size() - usb_input_offset;
   const std::size_t amount = available < length ? available : length;
   if (amount == 0) return 0;
@@ -46,7 +46,7 @@ std::uint32_t openmpg_usb_config_read(void* buffer, std::uint32_t length) {
   return static_cast<std::uint32_t>(amount);
 }
 
-std::uint32_t openmpg_usb_config_write(const void* buffer,
+std::uint32_t red_monkey_mpg_usb_config_write(const void* buffer,
                                        std::uint32_t length) {
   const std::size_t amount =
       length < usb_write_limit ? length : usb_write_limit;
@@ -54,11 +54,11 @@ std::uint32_t openmpg_usb_config_write(const void* buffer,
   return static_cast<std::uint32_t>(amount);
 }
 
-void openmpg_usb_config_flush(void) {}
+void red_monkey_mpg_usb_config_flush(void) {}
 
 }  // extern "C"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 bool PersistentConfig::load(ProductionMapping&) { return false; }
 
@@ -76,10 +76,10 @@ bool PersistentConfig::store_controller_address(const ProductionMapping&,
   return false;
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg
 
 int main() {
-  using namespace openmpg;
+  using namespace red_monkey_mpg;
   ProductionMapping mapping{};
   PersistentConfig storage{};
   ConfigService service{mapping, storage};
@@ -151,7 +151,7 @@ int main() {
   clear_output();
   feed(std::string(300, 'x').c_str());
   service.service();
-  assert(openmpg_usb_config_available() == 44);
+  assert(red_monkey_mpg_usb_config_available() == 44);
   feed("\n");
   service.service();
   assert(output_contains("UNSUPPORTED_PROTOCOL"));
@@ -159,7 +159,7 @@ int main() {
   clear_output();
   feed(std::string(1100, 'x').c_str());
   feed("\n");
-  while (openmpg_usb_config_available() != 0) service.service();
+  while (red_monkey_mpg_usb_config_available() != 0) service.service();
   assert(output_contains("FRAME_TOO_LARGE"));
 
   // TinyUSB is allowed to accept only part of a write. Verify that a response
@@ -184,9 +184,9 @@ int main() {
   feed("{\"protocol\":1,\"command\":\"GET_CONFIG\"}\n");
   service.service();
   feed("{\"protocol\":1,\"command\":\"GET_INFO\"}\n");
-  const auto queued_input = openmpg_usb_config_available();
+  const auto queued_input = red_monkey_mpg_usb_config_available();
   service.service();
-  assert(openmpg_usb_config_available() == queued_input);
+  assert(red_monkey_mpg_usb_config_available() == queued_input);
   usb_write_limit = static_cast<std::size_t>(-1);
   service.service();
   service.service();

@@ -1,8 +1,8 @@
-#include "openmpg/controller_profile.hpp"
+#include "red_monkey_mpg/controller_profile.hpp"
 
-#include "openmpg/lite2_report.hpp"
+#include "red_monkey_mpg/lite2_report.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 bool profile_supports_safe_motion(const ControllerProfile& profile) {
   const auto& capability = profile.capabilities;
@@ -48,4 +48,4 @@ const ControllerProfileRegistry& builtin_controller_profiles() {
   return registry;
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

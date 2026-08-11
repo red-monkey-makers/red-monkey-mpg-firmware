@@ -1,6 +1,6 @@
 # Live Bluetooth-to-USB bridge bench test
 
-`openmpg_live_bridge_bench.uf2` connects the commissioned 8BitDo Lite 2 to a
+`red_monkey_mpg_live_bridge_bench.uf2` connects the commissioned 8BitDo Lite 2 to a
 normal computer and emits the active compiled CNC profile's keyboard jog keys.
 
 **Do not connect this bench image to any machine controller.** Validate
@@ -18,7 +18,7 @@ every press, release, reconnect, and fault case on the Mac first.
 
 1. Disconnect the Pico from all machine controllers.
 2. Open macOS Keyboard Viewer.
-3. Flash `openmpg_live_bridge_bench.uf2` using BOOTSEL.
+3. Flash `red_monkey_mpg_live_bridge_bench.uf2` using BOOTSEL.
 4. If Keyboard Setup Assistant appears, close it.
 5. Keep the Lite 2 in D mode and press Home once to reconnect.
 6. With L2 released, center both sticks until the Pico LED becomes solid.
@@ -56,4 +56,4 @@ profile emits an ordinary unmodified step-jog key for precision.
 ## Exit
 
 Unplug the Pico. To restore the serial diagnostic, flash
-`outputs/openmpg_hid_dump.uf2` again using BOOTSEL.
+`outputs/red_monkey_mpg_hid_dump.uf2` again using BOOTSEL.

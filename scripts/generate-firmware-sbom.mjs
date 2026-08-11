@@ -56,7 +56,7 @@ const document = {
   dataLicense: "CC0-1.0",
   SPDXID: "SPDXRef-DOCUMENT",
   name: `Red Monkey MPG-firmware-${version}`,
-  documentNamespace: `https://openmpg.local/spdx/${version}/${identity}`,
+  documentNamespace: `https://red-monkey-mpg.local/spdx/${version}/${identity}`,
   creationInfo: {
     created: createdText,
     creators: ["Tool: Red Monkey MPG generate-firmware-sbom.mjs"],

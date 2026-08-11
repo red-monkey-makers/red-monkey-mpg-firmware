@@ -1,6 +1,6 @@
 # Configurable receiver preview — Mac bench test
 
-This test uses `openmpg_configurable_receiver_preview.uf2` and the local
+This test uses `red_monkey_mpg_configurable_receiver_preview.uf2` and the local
 `configurator/` web app. It validates composite USB, configuration persistence,
 and pairing on a Mac before any production firmware is considered.
 
@@ -11,7 +11,7 @@ use Keyboard Viewer while testing.
 ## 1. Flash and enumerate
 
 1. Disconnect the Pico from every CNC controller.
-2. Flash `outputs/openmpg_configurable_receiver_preview.uf2` using BOOTSEL.
+2. Flash `outputs/red_monkey_mpg_configurable_receiver_preview.uf2` using BOOTSEL.
 3. Open the local configurator in desktop Chrome or Edge.
 4. Click **Connect receiver**.
 5. Select the serial device associated with `Red Monkey MPG Configurable Receiver

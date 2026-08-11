@@ -15,7 +15,7 @@ deterministic safety properties. They require no Pico SDK. Run the same suite
 with AddressSanitizer and UndefinedBehaviorSanitizer before a release:
 
 ```sh
-cmake -S . -B build/host-sanitize -DOPENMPG_ENABLE_HOST_SANITIZERS=ON
+cmake -S . -B build/host-sanitize -DRED_MONKEY_MPG_ENABLE_HOST_SANITIZERS=ON
 cmake --build build/host-sanitize
 ctest --test-dir build/host-sanitize --output-on-failure
 ```
@@ -29,14 +29,14 @@ ctest --test-dir build/host-sanitize --output-on-failure
 
 ```sh
 cmake -S . -B build/pico \
-  -DOPENMPG_BUILD_HOST_TESTS=OFF \
-  -DOPENMPG_BUILD_PICO=ON \
+  -DRED_MONKEY_MPG_BUILD_HOST_TESTS=OFF \
+  -DRED_MONKEY_MPG_BUILD_PICO=ON \
   -DPICO_BOARD=pico2_w
-cmake --build build/pico --target openmpg_production_receiver
+cmake --build build/pico --target red_monkey_mpg_production_receiver
 ```
 
 4. Hold BOOTSEL while connecting the Pico, then copy
-   `openmpg_production_receiver.uf2` from `build/pico` to the RPI-RP2 drive.
+   `red_monkey_mpg_production_receiver.uf2` from `build/pico` to the RPI-RP2 drive.
 
 All diagnostic, stub, preview, and commissioning targets are excluded from the
 default build. Build one explicitly only when following its matching test
@@ -49,16 +49,16 @@ also requires a separately reviewed RP2350 signed-boot provisioning process:
 
 ```sh
 cmake -S . -B build/commercial \
-  -DOPENMPG_BUILD_HOST_TESTS=OFF \
-  -DOPENMPG_BUILD_PICO=ON \
-  -DOPENMPG_COMMERCIAL_RELEASE=ON \
-  -DOPENMPG_USB_VID=0x1234 \
-  -DOPENMPG_LITE2_DESCRIPTOR_SHA256=<64-hex-qualified-hash> \
-  -DOPENMPG_SECURE_BOOT_PROVISIONED=ON
+  -DRED_MONKEY_MPG_BUILD_HOST_TESTS=OFF \
+  -DRED_MONKEY_MPG_BUILD_PICO=ON \
+  -DRED_MONKEY_MPG_COMMERCIAL_RELEASE=ON \
+  -DRED_MONKEY_MPG_USB_VID=0x1234 \
+  -DRED_MONKEY_MPG_LITE2_DESCRIPTOR_SHA256=<64-hex-qualified-hash> \
+  -DRED_MONKEY_MPG_SECURE_BOOT_PROVISIONED=ON
 ```
 
 Replace `0x1234` with a VID/PID combination you are authorized to use. The
-`OPENMPG_SECURE_BOOT_PROVISIONED` flag is an assertion, not provisioning code;
+`RED_MONKEY_MPG_SECURE_BOOT_PROVISIONED` flag is an assertion, not provisioning code;
 it must never be enabled merely to bypass the guard. Verify the final artifact
 and device OTP policy using the approved manufacturing procedure.
 
@@ -67,15 +67,15 @@ signing workflow, follow [the controlled release process](RELEASE_PROCESS.md).
 
 ## Bluetooth discovery diagnostic
 
-The Pico build also creates `openmpg_bt_scan.uf2`. This safe bench image scans
+The Pico build also creates `red_monkey_mpg_bt_scan.uf2`. This safe bench image scans
 Bluetooth Classic devices and prints discovery results over USB serial. It has
 no USB keyboard output and cannot command a CNC controller. Flash it while connected only
 to a development computer, open the Pico's USB serial port, and put the Lite 2
 into pairing mode. A matching discovery line provides the controller name and
 Bluetooth address needed for the allow-listing step.
 
-After recording the controller address, configure `OPENMPG_CONTROLLER_ADDRESS`
-and build `openmpg_hid_dump`. This second safe diagnostic connects to that one
+After recording the controller address, configure `RED_MONKEY_MPG_CONTROLLER_ADDRESS`
+and build `red_monkey_mpg_hid_dump`. This second safe diagnostic connects to that one
 controller and prints raw HID reports over USB serial. Capture the centered
 report, then move or press exactly one control at a time so each byte or bit can
 be mapped unambiguously. It also prints the exact descriptor bytes and SHA-256
@@ -106,10 +106,10 @@ raw reports, then create fixtures for every control before enabling USB output.
 Build the bounded Mac-only keyboard diagnostic with:
 
 ```sh
-cmake --build build --target openmpg_keyboard_bench
+cmake --build build --target red_monkey_mpg_keyboard_bench
 ```
 
-Flash `build/openmpg_keyboard_bench.uf2` only after reading
+Flash `build/red_monkey_mpg_keyboard_bench.uf2` only after reading
 [`USB_KEYBOARD_BENCH_TEST.md`](USB_KEYBOARD_BENCH_TEST.md). Never connect that
 diagnostic image to a machine because its fixed sequence intentionally
 exercises all documented jog direction keys for the compiled test profile.
@@ -119,7 +119,7 @@ exercises all documented jog direction keys for the compiled test profile.
 After the bounded keyboard test passes, build the controller-driven Mac test:
 
 ```sh
-cmake --build build --target openmpg_live_bridge_bench
+cmake --build build --target red_monkey_mpg_live_bridge_bench
 ```
 
 Follow [`LIVE_BRIDGE_BENCH_TEST.md`](LIVE_BRIDGE_BENCH_TEST.md). This target

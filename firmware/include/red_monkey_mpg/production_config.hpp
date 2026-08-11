@@ -2,10 +2,10 @@
 
 #include <cstdint>
 
-#include "openmpg/masso_keyboard.hpp"
-#include "openmpg/types.hpp"
+#include "red_monkey_mpg/masso_keyboard.hpp"
+#include "red_monkey_mpg/types.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 enum class ButtonAction : std::uint8_t {
   unassigned,
@@ -43,4 +43,4 @@ ConfigValidation validate_production_mapping(const ProductionMapping& mapping);
 GamepadState apply_production_mapping(const GamepadState& raw,
                                       const ProductionMapping& mapping);
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

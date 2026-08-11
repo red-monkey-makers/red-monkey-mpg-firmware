@@ -7,8 +7,8 @@ identity and are never represented as approved commercial firmware. The
 [firmware prerelease workflow](../.github/workflows/firmware-prerelease.yml)
 runs only for tags beginning with `v` and requires a SemVer prerelease suffix.
 
-Before tagging, update the `OPENMPG_RELEASE_VERSION`,
-`OPENMPG_RELEASE_DATE`, and `OPENMPG_USB_BCD_DEVICE` defaults in
+Before tagging, update the `RED_MONKEY_MPG_RELEASE_VERSION`,
+`RED_MONKEY_MPG_RELEASE_DATE`, and `RED_MONKEY_MPG_USB_BCD_DEVICE` defaults in
 `CMakeLists.txt` through a reviewed pull request. The tag without its leading
 `v` must exactly match the embedded version. For example:
 
@@ -77,15 +77,15 @@ decisions.
 
 ```bash
 export PICO_SDK_PATH=/reviewed/pico-sdk
-export OPENMPG_USB_VID=0x1234
-export OPENMPG_USB_BCD_DEVICE=0x0100
-export OPENMPG_LITE2_DESCRIPTOR_SHA256=<64-hex-qualified-hash>
-export OPENMPG_SECURE_BOOT_PROVISIONED=ON
-export OPENMPG_RELEASE_DATE=2026-08-10
+export RED_MONKEY_MPG_USB_VID=0x1234
+export RED_MONKEY_MPG_USB_BCD_DEVICE=0x0100
+export RED_MONKEY_MPG_LITE2_DESCRIPTOR_SHA256=<64-hex-qualified-hash>
+export RED_MONKEY_MPG_SECURE_BOOT_PROVISIONED=ON
+export RED_MONKEY_MPG_RELEASE_DATE=2026-08-10
 scripts/build-commercial-release.sh 1.0.0
 ```
 
-Optionally set `OPENMPG_RELEASE_SIGNING_KEY` to an existing protected private
+Optionally set `RED_MONKEY_MPG_RELEASE_SIGNING_KEY` to an existing protected private
 key. The script will sign `SHA256SUMS`; it will never create or store a key.
 Verify the signature independently before publication.
 

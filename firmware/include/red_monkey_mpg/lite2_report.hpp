@@ -3,9 +3,9 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "openmpg/types.hpp"
+#include "red_monkey_mpg/types.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 struct ControllerProfile;
 
@@ -38,4 +38,4 @@ class Lite2ReportParser {
 
 const ControllerProfile& lite2_d_profile();
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 enum class Axis : std::uint8_t { x, y, z };
 enum class Direction : std::int8_t { negative = -1, positive = 1 };
@@ -43,4 +43,4 @@ struct OutputFrame {
   StepResolution step_resolution{StepResolution::mm_0_01};
 };
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

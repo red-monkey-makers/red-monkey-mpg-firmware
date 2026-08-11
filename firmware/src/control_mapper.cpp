@@ -1,8 +1,8 @@
-#include "openmpg/control_mapper.hpp"
+#include "red_monkey_mpg/control_mapper.hpp"
 
 #include <cstdlib>
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 ControlMapper::ControlMapper(MapperConfig config) : config_(config) {}
 
@@ -113,4 +113,4 @@ OutputFrame ControlMapper::update(const GamepadState& in,
   return out;
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

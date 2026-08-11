@@ -30,11 +30,11 @@ fi
 
 cmake_file="$repo_root/CMakeLists.txt"
 configured_version=$(sed -nE \
-  's/^set\(OPENMPG_RELEASE_VERSION "([^"]+)".*$/\1/p' "$cmake_file")
+  's/^set\(RED_MONKEY_MPG_RELEASE_VERSION "([^"]+)".*$/\1/p' "$cmake_file")
 release_date=$(sed -nE \
-  's/^set\(OPENMPG_RELEASE_DATE "([^"]+)".*$/\1/p' "$cmake_file")
+  's/^set\(RED_MONKEY_MPG_RELEASE_DATE "([^"]+)".*$/\1/p' "$cmake_file")
 usb_bcd_device=$(sed -nE \
-  's/^set\(OPENMPG_USB_BCD_DEVICE "([^"]+)".*$/\1/p' "$cmake_file")
+  's/^set\(RED_MONKEY_MPG_USB_BCD_DEVICE "([^"]+)".*$/\1/p' "$cmake_file")
 
 if [[ $configured_version != "$release_version" ]]; then
   echo "tag version $release_version does not match CMake version $configured_version" >&2
@@ -49,7 +49,7 @@ if [[ ! $usb_bcd_device =~ ^0[xX][0-9A-Fa-f]{4}$ ]]; then
   exit 2
 fi
 
-ninja_bin=${OPENMPG_NINJA:-$(command -v ninja)}
+ninja_bin=${RED_MONKEY_MPG_NINJA:-$(command -v ninja)}
 release_root="$repo_root/outputs/releases/$release_version"
 if [[ -e $release_root ]]; then
   echo "refusing to overwrite existing release: $release_root" >&2
@@ -64,31 +64,31 @@ configure_pico() {
     -DPICO_SDK_PATH="$PICO_SDK_PATH" \
     -DPICO_BOARD=pico2_w \
     -DCMAKE_BUILD_TYPE=Release \
-    -DOPENMPG_BUILD_HOST_TESTS=OFF \
-    -DOPENMPG_BUILD_PICO=ON \
-    -DOPENMPG_COMMERCIAL_RELEASE=OFF \
-    -DOPENMPG_RELEASE_VERSION="$release_version" \
-    -DOPENMPG_RELEASE_DATE="$release_date" \
-    -DOPENMPG_USB_BCD_DEVICE="$usb_bcd_device"
+    -DRED_MONKEY_MPG_BUILD_HOST_TESTS=OFF \
+    -DRED_MONKEY_MPG_BUILD_PICO=ON \
+    -DRED_MONKEY_MPG_COMMERCIAL_RELEASE=OFF \
+    -DRED_MONKEY_MPG_RELEASE_VERSION="$release_version" \
+    -DRED_MONKEY_MPG_RELEASE_DATE="$release_date" \
+    -DRED_MONKEY_MPG_USB_BCD_DEVICE="$usb_bcd_device"
 }
 
 for pass in a b; do
   build_dir="$release_root/build-$pass"
   configure_pico "$build_dir"
-  cmake --build "$build_dir" --target openmpg_production_receiver --parallel
+  cmake --build "$build_dir" --target red_monkey_mpg_production_receiver --parallel
 done
 
-cmp "$release_root/build-a/openmpg_production_receiver.uf2" \
-    "$release_root/build-b/openmpg_production_receiver.uf2"
-cp "$release_root/build-a/openmpg_production_receiver.uf2" \
+cmp "$release_root/build-a/red_monkey_mpg_production_receiver.uf2" \
+    "$release_root/build-b/red_monkey_mpg_production_receiver.uf2"
+cp "$release_root/build-a/red_monkey_mpg_production_receiver.uf2" \
    "$release_root/red-monkey-mpg-firmware-$release_version.uf2"
 
 host_dir="$release_root/host-tests"
 cmake -S "$repo_root" -B "$host_dir" -G Ninja \
   -DCMAKE_MAKE_PROGRAM="$ninja_bin" \
-  -DOPENMPG_BUILD_PICO=OFF \
-  -DOPENMPG_BUILD_HOST_TESTS=ON \
-  -DOPENMPG_ENABLE_HOST_SANITIZERS=ON \
+  -DRED_MONKEY_MPG_BUILD_PICO=OFF \
+  -DRED_MONKEY_MPG_BUILD_HOST_TESTS=ON \
+  -DRED_MONKEY_MPG_ENABLE_HOST_SANITIZERS=ON \
   -DCMAKE_BUILD_TYPE=Debug
 cmake --build "$host_dir" --parallel
 ctest --test-dir "$host_dir" --output-on-failure

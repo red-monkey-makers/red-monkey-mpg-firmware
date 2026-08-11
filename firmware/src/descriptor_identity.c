@@ -1,4 +1,4 @@
-#include "openmpg/descriptor_identity.h"
+#include "red_monkey_mpg/descriptor_identity.h"
 
 #include <string.h>
 
@@ -11,7 +11,7 @@ static int hex_nibble(char value) {
   return -1;
 }
 
-bool openmpg_descriptor_sha256(const uint8_t* descriptor, size_t length,
+bool red_monkey_mpg_descriptor_sha256(const uint8_t* descriptor, size_t length,
                                uint8_t output[32]) {
   if (descriptor == NULL || output == NULL || length == 0) return false;
   pico_sha256_state_t state = {0};
@@ -26,12 +26,12 @@ bool openmpg_descriptor_sha256(const uint8_t* descriptor, size_t length,
   return true;
 }
 
-bool openmpg_descriptor_sha256_hex(const uint8_t* descriptor, size_t length,
+bool red_monkey_mpg_descriptor_sha256_hex(const uint8_t* descriptor, size_t length,
                                    char output[65]) {
   static const char hex[] = "0123456789abcdef";
   uint8_t digest[32];
   if (output == NULL ||
-      !openmpg_descriptor_sha256(descriptor, length, digest)) {
+      !red_monkey_mpg_descriptor_sha256(descriptor, length, digest)) {
     return false;
   }
   for (size_t i = 0; i < sizeof(digest); ++i) {
@@ -42,7 +42,7 @@ bool openmpg_descriptor_sha256_hex(const uint8_t* descriptor, size_t length,
   return true;
 }
 
-bool openmpg_descriptor_matches_sha256(const uint8_t* descriptor,
+bool red_monkey_mpg_descriptor_matches_sha256(const uint8_t* descriptor,
                                        size_t length,
                                        const char* expected_hex) {
   if (expected_hex == NULL || strlen(expected_hex) != 64) return false;
@@ -54,7 +54,7 @@ bool openmpg_descriptor_matches_sha256(const uint8_t* descriptor,
     expected[i] = (uint8_t)((high << 4) | low);
   }
   uint8_t actual[32];
-  if (!openmpg_descriptor_sha256(descriptor, length, actual)) return false;
+  if (!red_monkey_mpg_descriptor_sha256(descriptor, length, actual)) return false;
   unsigned int different = 0;
   for (size_t i = 0; i < sizeof(actual); ++i) {
     different |= (unsigned int)(actual[i] ^ expected[i]);

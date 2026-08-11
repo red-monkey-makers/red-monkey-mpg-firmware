@@ -5,13 +5,13 @@
 #include <string.h>
 
 #include "btstack.h"
-#include "openmpg/descriptor_identity.h"
-#include "openmpg/input_diagnostic.h"
+#include "red_monkey_mpg/descriptor_identity.h"
+#include "red_monkey_mpg/input_diagnostic.h"
 #include "pico/cyw43_arch.h"
 #include "pico/stdlib.h"
 
-#ifndef OPENMPG_CONTROLLER_ADDRESS
-#error "OPENMPG_CONTROLLER_ADDRESS must be supplied by CMake"
+#ifndef RED_MONKEY_MPG_CONTROLLER_ADDRESS
+#error "RED_MONKEY_MPG_CONTROLLER_ADDRESS must be supplied by CMake"
 #endif
 
 #define HID_DESCRIPTOR_BYTES 512
@@ -31,7 +31,7 @@ static void schedule_connect(uint32_t delay_ms);
 static void connect_controller(btstack_timer_source_t *timer) {
   (void)timer;
   if (hid_cid != 0) return;
-  printf("Connecting to %s...\n", OPENMPG_CONTROLLER_ADDRESS);
+  printf("Connecting to %s...\n", RED_MONKEY_MPG_CONTROLLER_ADDRESS);
   const uint8_t status = hid_host_connect(
       controller_address, HID_PROTOCOL_MODE_REPORT, &hid_cid);
   if (status != ERROR_CODE_SUCCESS) {
@@ -196,7 +196,7 @@ static void packet_handler(uint8_t packet_type, uint16_t channel,
                 hid_descriptor_storage_get_descriptor_len(hid_cid);
             char fingerprint[65];
             printf("HID descriptor ready (%u bytes).\n", descriptor_length);
-            if (openmpg_descriptor_sha256_hex(descriptor, descriptor_length,
+            if (red_monkey_mpg_descriptor_sha256_hex(descriptor, descriptor_length,
                                               fingerprint)) {
               printf("DESCRIPTOR_SHA256 %s\n", fingerprint);
             } else {
@@ -225,7 +225,7 @@ static void packet_handler(uint8_t packet_type, uint16_t channel,
           printf("REPORT %3u: ", length);
           print_hex(report, length);
           print_decoded_report(report, length);
-          openmpg_diagnose_lite2_report(report, length,
+          red_monkey_mpg_diagnose_lite2_report(report, length,
                                         to_ms_since_boot(get_absolute_time()));
           break;
         }
@@ -253,9 +253,9 @@ int main(void) {
   stdio_init_all();
   sleep_ms(1500);
   printf("\nRed Monkey MPG raw HID diagnostic (keyboard output disabled)\n");
-  printf("Controller: %s\n", OPENMPG_CONTROLLER_ADDRESS);
+  printf("Controller: %s\n", RED_MONKEY_MPG_CONTROLLER_ADDRESS);
 
-  if (!sscanf_bd_addr(OPENMPG_CONTROLLER_ADDRESS, controller_address)) {
+  if (!sscanf_bd_addr(RED_MONKEY_MPG_CONTROLLER_ADDRESS, controller_address)) {
     printf("ERROR: invalid controller Bluetooth address.\n");
     while (true) tight_loop_contents();
   }

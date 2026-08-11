@@ -1,8 +1,8 @@
-#include "openmpg/platform.hpp"
+#include "red_monkey_mpg/platform.hpp"
 
 #include "pico/stdlib.h"
 
-namespace openmpg::platform {
+namespace red_monkey_mpg::platform {
 
 // These fail-closed placeholders are the two hardware integration seams.
 // Implement poll_gamepad with BTstack HID host and send_keyboard_output with
@@ -12,4 +12,4 @@ std::uint32_t milliseconds() { return to_ms_since_boot(get_absolute_time()); }
 GamepadState poll_gamepad() { return {}; }
 void send_keyboard_output(const OutputFrame&) {}
 
-}  // namespace openmpg::platform
+}  // namespace red_monkey_mpg::platform

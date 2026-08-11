@@ -1,4 +1,4 @@
-#include "openmpg/config_service.hpp"
+#include "red_monkey_mpg/config_service.hpp"
 
 #include <cstdio>
 #include <cstdlib>
@@ -6,7 +6,7 @@
 
 #include "usb_keyboard_device.h"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 namespace {
 
 const char* find_once(const char* line, const char* key) {
@@ -168,14 +168,14 @@ void ConfigService::service_tx() {
     return;
   }
   const std::size_t pending = tx_size_ - tx_offset_;
-  const auto written = openmpg_usb_config_write(
+  const auto written = red_monkey_mpg_usb_config_write(
       tx_ + tx_offset_, static_cast<std::uint32_t>(pending));
   if (written > pending) {
     // A broken USB backend must not move the queue cursor out of bounds.
     return;
   }
   tx_offset_ += written;
-  if (written != 0) openmpg_usb_config_flush();
+  if (written != 0) red_monkey_mpg_usb_config_flush();
   if (tx_offset_ == tx_size_) {
     tx_offset_ = 0;
     tx_size_ = 0;
@@ -335,7 +335,7 @@ void ConfigService::handle_line(char* line) {
 }
 
 void ConfigService::service() {
-  const bool connected = openmpg_usb_config_connected();
+  const bool connected = red_monkey_mpg_usb_config_connected();
   if (!connected) {
     active_ = false;
     input_size_ = 0;
@@ -354,9 +354,9 @@ void ConfigService::service() {
   constexpr std::uint32_t kMaxBytesPerService = 256;
   std::uint32_t processed = 0;
   while (processed < kMaxBytesPerService &&
-         openmpg_usb_config_available() != 0) {
+         red_monkey_mpg_usb_config_available() != 0) {
     char byte;
-    if (openmpg_usb_config_read(&byte, 1) != 1) break;
+    if (red_monkey_mpg_usb_config_read(&byte, 1) != 1) break;
     ++processed;
     if (byte == '\n') {
       if (!overflow_ && input_size_ != 0) {
@@ -403,4 +403,4 @@ void ConfigService::emit_pairing_state(const char* state) {
   write_line(event);
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

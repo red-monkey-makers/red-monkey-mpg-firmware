@@ -2,9 +2,9 @@
 
 #include <cstdint>
 
-#include "openmpg/production_config.hpp"
+#include "red_monkey_mpg/production_config.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 // Uses two independent BTstack TLV tags. A new record is written and read back
 // before it can supersede the previous valid record.
@@ -25,4 +25,4 @@ class PersistentConfig {
   char controller_address_[18]{};
 };
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

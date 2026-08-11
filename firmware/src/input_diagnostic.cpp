@@ -1,17 +1,17 @@
-#include "openmpg/input_diagnostic.h"
+#include "red_monkey_mpg/input_diagnostic.h"
 
 #include <cstdio>
 
-#include "openmpg/control_mapper.hpp"
-#include "openmpg/controller_profile.hpp"
-#include "openmpg/lite2_report.hpp"
+#include "red_monkey_mpg/control_mapper.hpp"
+#include "red_monkey_mpg/controller_profile.hpp"
+#include "red_monkey_mpg/lite2_report.hpp"
 
-extern "C" void openmpg_diagnose_lite2_report(const std::uint8_t* report,
+extern "C" void red_monkey_mpg_diagnose_lite2_report(const std::uint8_t* report,
                                                 std::uint16_t length,
                                                 std::uint32_t now_ms) {
-  static openmpg::ControlMapper mapper;
-  openmpg::GamepadState input{};
-  if (!openmpg::lite2_d_profile().parse_report(report, length, now_ms,
+  static red_monkey_mpg::ControlMapper mapper;
+  red_monkey_mpg::GamepadState input{};
+  if (!red_monkey_mpg::lite2_d_profile().parse_report(report, length, now_ms,
                                                 input)) {
     std::printf("MAPPED invalid Lite 2 report\n");
     return;
@@ -26,10 +26,10 @@ extern "C" void openmpg_diagnose_lite2_report(const std::uint8_t* report,
     std::printf("ACTION=RELEASE\n");
     return;
   }
-  const char axis = frame.jog.axis == openmpg::Axis::x
+  const char axis = frame.jog.axis == red_monkey_mpg::Axis::x
                         ? 'X'
-                        : (frame.jog.axis == openmpg::Axis::y ? 'Y' : 'Z');
-  const char direction = frame.jog.direction == openmpg::Direction::positive
+                        : (frame.jog.axis == red_monkey_mpg::Axis::y ? 'Y' : 'Z');
+  const char direction = frame.jog.direction == red_monkey_mpg::Direction::positive
                              ? '+'
                              : '-';
   std::printf("ACTION=JOG_%c%c\n", axis, direction);

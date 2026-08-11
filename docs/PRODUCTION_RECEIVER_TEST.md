@@ -1,6 +1,6 @@
 # Unified receiver release-candidate test
 
-Use `outputs/openmpg_production_receiver.uf2`. This single image replaces the
+Use `outputs/red_monkey_mpg_production_receiver.uf2`. This single image replaces the
 separate setup-preview and commissioning images for controlled testing after
 the checks below pass. It is not yet an approved commercial release.
 

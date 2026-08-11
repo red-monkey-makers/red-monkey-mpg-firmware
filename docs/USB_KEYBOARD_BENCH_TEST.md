@@ -1,6 +1,6 @@
 # USB keyboard bench test
 
-`openmpg_keyboard_bench.uf2` is a bounded commissioning image for a normal
+`red_monkey_mpg_keyboard_bench.uf2` is a bounded commissioning image for a normal
 computer. **Do not connect this image to any machine controller.** It
 deliberately exercises every jog direction in the compiled bench profile.
 
@@ -22,7 +22,7 @@ for 600 ms. It cannot repeat without a full Pico power cycle and reflash/reboot.
 
 1. Disconnect the Pico from every machine controller.
 2. Open a keyboard event viewer on the Mac.
-3. Flash `openmpg_keyboard_bench.uf2` using BOOTSEL.
+3. Flash `red_monkey_mpg_keyboard_bench.uf2` using BOOTSEL.
 4. If macOS opens Keyboard Setup Assistant, close it; no layout setup is needed.
 5. Select the event viewer within eight seconds and observe the sequence above.
 6. Confirm that every press is followed by a release and no key remains held.

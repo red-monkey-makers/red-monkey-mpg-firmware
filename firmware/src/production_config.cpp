@@ -1,6 +1,6 @@
-#include "openmpg/production_config.hpp"
+#include "red_monkey_mpg/production_config.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 namespace {
 
 constexpr std::uint32_t kMotionControls =
@@ -125,4 +125,4 @@ GamepadState apply_production_mapping(const GamepadState& raw,
   return mapped;
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

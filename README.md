@@ -59,7 +59,7 @@ for supported gamepad parsing.
 
 ```text
 firmware/             Pico firmware and portable control logic
-  include/openmpg/    Public headers
+  include/red_monkey_mpg/    Public headers
   src/                Core and hardware adapter skeletons
   tests/              Host-side tests
 docs/                 Mapping, safety, architecture, setup, and roadmap
@@ -92,11 +92,11 @@ scripts/               Controlled release and SBOM tooling
 See [docs/BUILDING.md](docs/BUILDING.md) to build and test, then read
 [docs/SAFETY.md](docs/SAFETY.md) before connecting to a machine.
 
-The separate `openmpg_keyboard_bench` image only validates USB enumeration and
+The separate `red_monkey_mpg_keyboard_bench` image only validates USB enumeration and
 the bounded key sequence on a normal computer. It is not machine firmware; see
 [docs/USB_KEYBOARD_BENCH_TEST.md](docs/USB_KEYBOARD_BENCH_TEST.md).
 
-The `openmpg_live_bridge_bench` image drives those keys from the
+The `red_monkey_mpg_live_bridge_bench` image drives those keys from the
 commissioned controller but is still Mac-only test firmware. Its mandatory
 fault and release checks are in
 [docs/LIVE_BRIDGE_BENCH_TEST.md](docs/LIVE_BRIDGE_BENCH_TEST.md).
@@ -106,7 +106,7 @@ profile using its profile-specific guide, with motion physically disabled
 before any powered test. The first guide is
 [MASSO G3 Touch 5.13 commissioning](docs/MASSO_G3_513_COMMISSIONING.md).
 
-The unified `outputs/openmpg_production_receiver.uf2` image is the current
+The unified `outputs/red_monkey_mpg_production_receiver.uf2` image is the current
 release candidate for setup and controlled machine testing. It exposes a
 fail-closed setup channel over USB serial on Mac/Windows and acts as a USB
 keyboard using the selected CNC profile whenever the setup port is closed.

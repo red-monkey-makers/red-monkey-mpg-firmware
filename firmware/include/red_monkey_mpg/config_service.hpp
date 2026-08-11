@@ -3,9 +3,9 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "openmpg/persistent_config.hpp"
+#include "red_monkey_mpg/persistent_config.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 struct ConfigServiceHooks {
   void (*start_scan)(){};
@@ -47,4 +47,4 @@ class ConfigService {
   bool overflow_{};
 };
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

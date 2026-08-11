@@ -1,6 +1,6 @@
-#include "openmpg/mobile_protocol.hpp"
+#include "red_monkey_mpg/mobile_protocol.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 namespace {
 
 constexpr std::int16_t kFullNegative = -32767;
@@ -125,4 +125,4 @@ MobileFrameResult MobileInputSession::consume(const std::uint8_t* data,
   return result;
 }
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg

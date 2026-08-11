@@ -7,7 +7,7 @@
 // the host resumes.
 static volatile bool usb_suspended = false;
 
-void openmpg_usb_keyboard_init(void) {
+void red_monkey_mpg_usb_keyboard_init(void) {
   tusb_rhport_init_t device_init = {
       .role = TUSB_ROLE_DEVICE,
       .speed = TUSB_SPEED_AUTO,
@@ -15,39 +15,39 @@ void openmpg_usb_keyboard_init(void) {
   tusb_init(0, &device_init);
 }
 
-void openmpg_usb_keyboard_task(void) { tud_task(); }
+void red_monkey_mpg_usb_keyboard_task(void) { tud_task(); }
 
-bool openmpg_usb_keyboard_mounted(void) {
+bool red_monkey_mpg_usb_keyboard_mounted(void) {
   return tud_mounted() && !usb_suspended;
 }
 
-bool openmpg_usb_keyboard_ready(void) {
-  return openmpg_usb_keyboard_mounted() && tud_hid_ready();
+bool red_monkey_mpg_usb_keyboard_ready(void) {
+  return red_monkey_mpg_usb_keyboard_mounted() && tud_hid_ready();
 }
 
-bool openmpg_usb_keyboard_send(const uint8_t report[8]) {
-  if (!openmpg_usb_keyboard_ready()) return false;
+bool red_monkey_mpg_usb_keyboard_send(const uint8_t report[8]) {
+  if (!red_monkey_mpg_usb_keyboard_ready()) return false;
   return tud_hid_keyboard_report(0, report[0], report + 2);
 }
 
-bool openmpg_usb_config_connected(void) {
-#if OPENMPG_ENABLE_CONFIG_CDC
+bool red_monkey_mpg_usb_config_connected(void) {
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
   return !usb_suspended && tud_cdc_connected();
 #else
   return false;
 #endif
 }
 
-uint32_t openmpg_usb_config_available(void) {
-#if OPENMPG_ENABLE_CONFIG_CDC
+uint32_t red_monkey_mpg_usb_config_available(void) {
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
   return tud_cdc_available();
 #else
   return 0;
 #endif
 }
 
-uint32_t openmpg_usb_config_read(void* buffer, uint32_t length) {
-#if OPENMPG_ENABLE_CONFIG_CDC
+uint32_t red_monkey_mpg_usb_config_read(void* buffer, uint32_t length) {
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
   return tud_cdc_read(buffer, length);
 #else
   (void)buffer;
@@ -56,8 +56,8 @@ uint32_t openmpg_usb_config_read(void* buffer, uint32_t length) {
 #endif
 }
 
-uint32_t openmpg_usb_config_write(const void* buffer, uint32_t length) {
-#if OPENMPG_ENABLE_CONFIG_CDC
+uint32_t red_monkey_mpg_usb_config_write(const void* buffer, uint32_t length) {
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
   return tud_cdc_write(buffer, length);
 #else
   (void)buffer;
@@ -66,8 +66,8 @@ uint32_t openmpg_usb_config_write(const void* buffer, uint32_t length) {
 #endif
 }
 
-void openmpg_usb_config_flush(void) {
-#if OPENMPG_ENABLE_CONFIG_CDC
+void red_monkey_mpg_usb_config_flush(void) {
+#if RED_MONKEY_MPG_ENABLE_CONFIG_CDC
   tud_cdc_write_flush();
 #endif
 }

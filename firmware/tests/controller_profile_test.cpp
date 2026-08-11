@@ -1,26 +1,26 @@
-#include "openmpg/controller_profile.hpp"
-#include "openmpg/control_mapper.hpp"
-#include "openmpg/lite2_report.hpp"
+#include "red_monkey_mpg/controller_profile.hpp"
+#include "red_monkey_mpg/control_mapper.hpp"
+#include "red_monkey_mpg/lite2_report.hpp"
 
 #include <array>
 #include <cassert>
 
 namespace {
 
-openmpg::ProfileMatch always_compatible(const openmpg::ControllerProbe&) {
-  return openmpg::ProfileMatch::compatible;
+red_monkey_mpg::ProfileMatch always_compatible(const red_monkey_mpg::ControllerProbe&) {
+  return red_monkey_mpg::ProfileMatch::compatible;
 }
 
 bool inert_parser(const std::uint8_t*, std::size_t, std::uint32_t,
-                  openmpg::GamepadState&) {
+                  red_monkey_mpg::GamepadState&) {
   return false;
 }
 
-openmpg::ControllerProfile fake_profile(const char* id) {
+red_monkey_mpg::ControllerProfile fake_profile(const char* id) {
   return {id,
           id,
-          openmpg::ControllerTransport::bluetooth_classic_hid,
-          openmpg::ProfileMaturity::experimental,
+          red_monkey_mpg::ControllerTransport::bluetooth_classic_hid,
+          red_monkey_mpg::ProfileMaturity::experimental,
           {/*x_axis=*/true, /*y_axis=*/true, /*z_axis=*/true,
            /*held_deadman_candidate=*/true,
            /*continuous_modifier_candidate=*/false,
@@ -32,7 +32,7 @@ openmpg::ControllerProfile fake_profile(const char* id) {
 }  // namespace
 
 int main() {
-  using namespace openmpg;
+  using namespace red_monkey_mpg;
 
   std::array<std::uint8_t, 83> descriptor{};
   ControllerProbe probe{ControllerTransport::bluetooth_classic_hid,

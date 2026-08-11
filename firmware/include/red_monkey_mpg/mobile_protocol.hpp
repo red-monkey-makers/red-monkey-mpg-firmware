@@ -3,9 +3,9 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "openmpg/types.hpp"
+#include "red_monkey_mpg/types.hpp"
 
-namespace openmpg {
+namespace red_monkey_mpg {
 
 constexpr std::size_t kMobileFrameLength = 10;
 constexpr std::uint8_t kMobileProtocolVersion = 2;
@@ -51,4 +51,4 @@ class MobileInputSession {
   std::uint8_t last_event_sequence_{};
 };
 
-}  // namespace openmpg
+}  // namespace red_monkey_mpg
