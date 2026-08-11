@@ -98,6 +98,7 @@ if(OPENMPG_BUILD_HOST_TESTS)
     firmware/src/control_mapper.cpp
     firmware/src/lite2_report.cpp
     firmware/src/masso_keyboard.cpp
+    firmware/src/mobile_protocol.cpp
     firmware/src/production_config.cpp
   )
   target_include_directories(openmpg_core PUBLIC firmware/include)
@@ -145,11 +146,19 @@ if(OPENMPG_BUILD_HOST_TESTS)
   add_test(NAME openmpg_persistent_config_tests
            COMMAND openmpg_persistent_config_tests)
 
+  add_executable(openmpg_mobile_protocol_tests
+    firmware/tests/mobile_protocol_test.cpp)
+  target_link_libraries(openmpg_mobile_protocol_tests PRIVATE openmpg_core)
+  target_compile_options(openmpg_mobile_protocol_tests PRIVATE
+    -UNDEBUG -Wall -Wextra -Wpedantic -Werror)
+  add_test(NAME openmpg_mobile_protocol_tests COMMAND openmpg_mobile_protocol_tests)
+
   if(OPENMPG_ENABLE_HOST_SANITIZERS AND
      CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
     foreach(target openmpg_core openmpg_core_tests openmpg_controller_profile_tests
                    openmpg_safety_properties_tests
-                   openmpg_config_service_tests openmpg_persistent_config_tests)
+                   openmpg_config_service_tests openmpg_persistent_config_tests
+                   openmpg_mobile_protocol_tests)
       target_compile_options(${target} PRIVATE
         -fsanitize=address,undefined -fno-omit-frame-pointer)
       target_link_options(${target} PRIVATE -fsanitize=address,undefined)
@@ -218,6 +227,32 @@ if(OPENMPG_BUILD_PICO)
   pico_enable_stdio_usb(openmpg_hid_dump 1)
   pico_enable_stdio_uart(openmpg_hid_dump 0)
   pico_add_extra_outputs(openmpg_hid_dump)
+
+  # Safe iPhone protocol diagnostic. It advertises the mobile BLE service and
+  # validates every command frame, but deliberately links no TinyUSB keyboard
+  # descriptor or CNC output implementation.
+  add_executable(openmpg_mobile_ble_bench EXCLUDE_FROM_ALL
+    firmware/diagnostics/mobile_ble_bench.cpp
+    firmware/src/mobile_protocol.cpp
+  )
+  target_include_directories(openmpg_mobile_ble_bench PRIVATE
+    firmware/config firmware/include)
+  target_compile_features(openmpg_mobile_ble_bench PRIVATE cxx_std_17)
+  target_compile_definitions(openmpg_mobile_ble_bench PRIVATE
+    CYW43_LWIP=0
+    OPENMPG_ENABLE_MOBILE_BLE=1)
+  target_link_libraries(openmpg_mobile_ble_bench PRIVATE
+    pico_stdlib
+    pico_cyw43_arch_poll
+    pico_btstack_cyw43
+    pico_btstack_ble
+    pico_btstack_flash_bank
+  )
+  pico_btstack_make_gatt_header(openmpg_mobile_ble_bench PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/firmware/bluetooth/mobile_jogger.gatt")
+  pico_enable_stdio_usb(openmpg_mobile_ble_bench 1)
+  pico_enable_stdio_uart(openmpg_mobile_ble_bench 0)
+  pico_add_extra_outputs(openmpg_mobile_ble_bench)
 
   # Mac-only USB keyboard commissioning image. It has no Bluetooth input and
   # emits one bounded test sequence after an eight-second delay.

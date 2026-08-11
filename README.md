@@ -37,6 +37,9 @@ powers the Pico and carries USB HID keyboard reports to the CNC controller.
 - [MASSO G3 Touch end-user guide](docs/MASSO_END_USER_GUIDE.md) — startup,
   controls, daily operation, safety checks, and troubleshooting for a receiver
   supplied preprogrammed for MASSO.
+- [Mobile BLE bench test](docs/MOBILE_BLE_BENCH_TEST.md) — safely exercise the
+  Red Monkey CNC Jogger iOS client with a diagnostic UF2 that cannot emit CNC
+  keyboard commands.
 
 ## Design
 

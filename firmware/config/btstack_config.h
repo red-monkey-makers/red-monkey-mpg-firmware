@@ -11,6 +11,16 @@
 #define ENABLE_LOG_INFO
 #endif
 
+// Mobile-client bench support is target-local so BLE-only configuration cannot
+// alter the production Bluetooth Classic receiver's BTstack data structures.
+#ifdef OPENMPG_ENABLE_MOBILE_BLE
+#define ENABLE_LE_PERIPHERAL
+#define ENABLE_LE_SECURE_CONNECTIONS
+#define ENABLE_MICRO_ECC_FOR_LE_SECURE_CONNECTIONS
+#define ENABLE_SOFTWARE_AES128
+#define MAX_ATT_DB_SIZE 512
+#endif
+
 // Fixed-size BTstack pools: no allocator is used from Bluetooth callbacks.
 #define HCI_OUTGOING_PRE_BUFFER_SIZE 4
 #define HCI_ACL_PAYLOAD_SIZE (1691 + 4)
