@@ -1,4 +1,4 @@
-# Red Monkey CNC Jogger: motion-safe BLE bench test
+# Red Monkey MPG iOS: motion-safe BLE bench test
 
 The `red_monkey_mpg_mobile_ble_bench` target lets you test the iOS client and Pico BLE
 protocol without producing USB keyboard reports.
@@ -59,17 +59,19 @@ then `Y` to exit `screen`.
 
 1. Open `RedMonkeyCNCJogger.xcodeproj` in Xcode.
 2. Select a physical iPhone and your Apple development team.
-3. Build and run **Red Monkey CNC Jogger**.
+3. Build and run the `RedMonkeyCNCJogger` scheme. The installed app is named
+   **Red Monkey MPG**.
 4. Tap **Find receiver**, select `RMJogger`, and approve the iOS pairing prompt.
 5. Confirm the app displays `Bench mode — keyboard output is disabled.`
 
 Exercise each control and compare the app with the USB serial log:
 
-- Hold **ENABLE**, then separately hold X−, X+, Y−, Y+, Z−, and Z+.
-- Verify no second direction activates until every direction is released.
-- Verify releasing ENABLE immediately returns to neutral.
-- Test CONTINUOUS and PRECISION separately; they must never be active together.
-- Select every resolution and test cancel.
+- In **Single Step** mode, tap X−, X+, Y−, Y+, Z−, and Z+ separately. Verify
+  that every tap produces one bounded direction pulse followed by neutral.
+- In **Continuous** mode, press and hold each direction separately. Verify that
+  releasing the direction immediately returns to neutral.
+- While holding one direction, verify that a second direction cannot activate.
+- Select every resolution while neutral and confirm the reported value.
 - Background the app and turn off Bluetooth; both must fail closed.
 - Leave a motion control held and stop the app; the receiver must time out and
   return to neutral within 150 ms of its last valid control frame.
