@@ -39,13 +39,19 @@ std::uint8_t controller_profile{
 bool notify_enabled{};
 bool neutral_required{true};
 
-std::array<std::uint8_t, 31> advertisement{
+std::array<std::uint8_t, 21> advertisement{
     0x02, BLUETOOTH_DATA_TYPE_FLAGS, 0x02,
     0x11, BLUETOOTH_DATA_TYPE_COMPLETE_LIST_OF_128_BIT_SERVICE_CLASS_UUIDS,
     0xC6, 0x04, 0xE3, 0x7F, 0xA9, 0xF4, 0x91, 0x8A,
-    0xE0, 0x44, 0x1F, 0x0B, 0xB6, 0x96, 0x3A, 0x7A,
-    0x09, BLUETOOTH_DATA_TYPE_SHORTENED_LOCAL_NAME,
-    'R', 'M', 'J', 'o', 'g', 'g', 'e', 'r'};
+    0xE0, 0x44, 0x1F, 0x0B, 0xB6, 0x96, 0x3A, 0x7A};
+
+std::array<std::uint8_t, 16> scan_response{
+    0x0F, BLUETOOTH_DATA_TYPE_COMPLETE_LOCAL_NAME,
+    'R',  'e',  'd',  ' ',  'M', 'o', 'n', 'k',
+    'e',  'y',  ' ',  'M',  'P', 'G'};
+
+static_assert(advertisement.size() <= 31);
+static_assert(scan_response.size() <= 31);
 
 std::array<std::uint8_t, red_monkey_mpg::kMobileFrameLength> status_frame() {
   std::array<std::uint8_t, red_monkey_mpg::kMobileFrameLength> bytes{
@@ -234,6 +240,7 @@ int main() {
   gap_advertisements_set_params(0x0030, 0x0060, 0, 0, null_address, 0x07,
                                 0x00);
   gap_advertisements_set_data(advertisement.size(), advertisement.data());
+  gap_scan_response_set_data(scan_response.size(), scan_response.data());
   gap_advertisements_enable(1);
   hci_power_control(HCI_POWER_ON);
 

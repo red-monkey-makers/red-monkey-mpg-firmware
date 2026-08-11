@@ -9,7 +9,7 @@ protocol without producing USB keyboard reports.
 
 ## What the diagnostic firmware does
 
-- Advertises the BLE name `RMJogger`.
+- Advertises the BLE name `Red Monkey MPG`.
 - Requires encrypted Bluetooth Low Energy pairing with bonding.
 - Validates packet version, length, controller profile, ranges, sequence, and CRC.
 - Accepts only a supported CNC controller profile and reports the active profile
@@ -61,7 +61,8 @@ then `Y` to exit `screen`.
 2. Select a physical iPhone and your Apple development team.
 3. Build and run the `RedMonkeyCNCJogger` scheme. The installed app is named
    **Red Monkey MPG**.
-4. Tap **Find receiver**, select `RMJogger`, and approve the iOS pairing prompt.
+4. Tap **Find receiver**, select **Red Monkey MPG**, and approve the iOS
+   pairing prompt.
 5. Confirm the app displays `Bench mode — keyboard output is disabled.`
 
 Exercise each control and compare the app with the USB serial log:
