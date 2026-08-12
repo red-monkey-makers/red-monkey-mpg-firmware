@@ -18,7 +18,7 @@ at a time.
   <img src="docs/assets/red-monkey-mpg-product.jpg" alt="Red Monkey MPG receiver with coral 8BitDo Lite 2 controller and USB cable, showing the gamepad configuration" width="900">
 </p>
 
-> **Release status:** `0.4.0-rc.2` is a hardened release candidate,
+> **Release status:** `0.4.0-rc.3` is a hardened release candidate,
 > not an approved commercial image. The prototype has completed Mac keyboard
 > and machine testing with the first CNC controller profile using both the
 > gamepad and iPhone receiver paths.
@@ -126,7 +126,7 @@ profile using its profile-specific guide, with motion physically disabled
 before any powered test. The first guide is
 [MASSO G3 Touch 5.13 commissioning](docs/MASSO_G3_513_COMMISSIONING.md).
 
-The `red-monkey-mpg-firmware-<version>.uf2` release image is the gamepad
+The `red-monkey-mpg-gamepad-receiver-<version>.uf2` release image is the gamepad
 receiver. Its build target is `red_monkey_mpg_production_receiver`. It exposes a
 fail-closed setup channel over USB serial on Mac/Windows and acts as a USB
 keyboard using the selected CNC profile whenever the setup port is closed.
@@ -135,7 +135,7 @@ receiver exposes a USB serial derived from its Pico chip ID. Follow
 [docs/PRODUCTION_RECEIVER_TEST.md](docs/PRODUCTION_RECEIVER_TEST.md) before
 machine use.
 
-The `red-monkey-mpg-iphone-receiver-<version>.uf2` release image accepts
+The `red-monkey-mpg-mobile-receiver-<version>.uf2` release image accepts
 the Red Monkey MPG iOS app instead of a Bluetooth gamepad. GitHub prereleases
 include both variants, but only one image can be installed on a Pico at a time.
 Complete the [iPhone receiver MASSO test](docs/MOBILE_RECEIVER_MASSO_TEST.md)

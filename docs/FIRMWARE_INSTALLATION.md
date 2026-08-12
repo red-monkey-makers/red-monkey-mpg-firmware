@@ -25,8 +25,8 @@ Download firmware from the project's
 Under **Assets**, download the receiver variant you intend to use:
 
 ```text
-red-monkey-mpg-firmware-0.4.0-rc.2.uf2
-red-monkey-mpg-iphone-receiver-0.4.0-rc.2.uf2
+red-monkey-mpg-gamepad-receiver-<version>.uf2
+red-monkey-mpg-mobile-receiver-<version>.uf2
 ```
 
 Install exactly one variant. The version will change in later releases. Do not
@@ -37,8 +37,8 @@ named `keyboard_bench`, `hid_dump`, `bt_scan`, `live_bridge_bench`,
 
 | File | Use it for |
 |---|---|
-| `red-monkey-mpg-firmware-<version>.uf2` | Supported Bluetooth gamepad; currently the 8BitDo Lite 2 in D mode |
-| `red-monkey-mpg-iphone-receiver-<version>.uf2` | Red Monkey MPG iPhone app |
+| `red-monkey-mpg-gamepad-receiver-<version>.uf2` | Supported Bluetooth gamepad; currently the 8BitDo Lite 2 in D mode |
+| `red-monkey-mpg-mobile-receiver-<version>.uf2` | Red Monkey MPG iPhone app |
 
 See [Choose a receiver firmware image](FIRMWARE_VARIANTS.md) for the full
 comparison.
@@ -51,13 +51,13 @@ that the downloaded file matches the published asset.
 On macOS, open Terminal and run:
 
 ```sh
-shasum -a 256 ~/Downloads/red-monkey-mpg-firmware-0.4.0-rc.2.uf2
+shasum -a 256 ~/Downloads/red-monkey-mpg-gamepad-receiver-0.4.0-rc.3.uf2
 ```
 
 On Windows, open PowerShell and run:
 
 ```powershell
-Get-FileHash "$HOME\Downloads\red-monkey-mpg-firmware-0.4.0-rc.2.uf2" -Algorithm SHA256
+Get-FileHash "$HOME\Downloads\red-monkey-mpg-gamepad-receiver-0.4.0-rc.3.uf2" -Algorithm SHA256
 ```
 
 Use the actual downloaded filename. The resulting value must exactly match the
@@ -121,7 +121,7 @@ use the Red Monkey MPG Configurator to pair and save the intended profile.
 
 ## Reconnect the iPhone receiver
 
-1. Confirm you installed `red-monkey-mpg-iphone-receiver-<version>.uf2`.
+1. Confirm you installed `red-monkey-mpg-mobile-receiver-<version>.uf2`.
 2. Connect the receiver to a computer for initial keyboard-viewer testing, or
    to the CNC controller only after that testing passes.
 3. Open Red Monkey MPG on the iPhone and use the antenna/connection menu.

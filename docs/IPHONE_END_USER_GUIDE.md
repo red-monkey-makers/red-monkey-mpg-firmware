@@ -1,8 +1,8 @@
 # Red Monkey MPG iPhone user guide — MASSO G3 Touch
 
-This guide is for a Pico 2 W running the iPhone receiver firmware and connected
-to a MASSO G3/G3 Touch. It does not apply to the separately flashed Bluetooth
-gamepad receiver.
+This guide is for a Pico 2 W running
+`red-monkey-mpg-mobile-receiver-<version>.uf2` and connected to a MASSO G3/G3
+Touch. It does not apply to the separately flashed Bluetooth gamepad receiver.
 
 > **Important:** Red Monkey MPG is a convenience control, not a safety device.
 > Keep the physical E-stop accessible and retain every machine guard,

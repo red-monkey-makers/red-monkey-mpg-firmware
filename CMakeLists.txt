@@ -33,11 +33,11 @@ set(RED_MONKEY_MPG_USB_VID "0xCAFE" CACHE STRING
     "Authorized USB vendor ID (0xCAFE is development-only)")
 set(RED_MONKEY_MPG_LITE2_DESCRIPTOR_SHA256 "" CACHE STRING
     "Approved 8BitDo Lite 2 D-mode HID descriptor SHA-256")
-set(RED_MONKEY_MPG_RELEASE_VERSION "0.4.0-rc.2" CACHE STRING
+set(RED_MONKEY_MPG_RELEASE_VERSION "0.4.0-rc.3" CACHE STRING
     "Version embedded in the production receiver")
-set(RED_MONKEY_MPG_RELEASE_DATE "2026-08-11" CACHE STRING
+set(RED_MONKEY_MPG_RELEASE_DATE "2026-08-12" CACHE STRING
     "ISO release date embedded in the production receiver")
-set(RED_MONKEY_MPG_USB_BCD_DEVICE "0x0401" CACHE STRING
+set(RED_MONKEY_MPG_USB_BCD_DEVICE "0x0402" CACHE STRING
     "USB bcdDevice revision for the production receiver")
 if(NOT RED_MONKEY_MPG_RELEASE_VERSION MATCHES
    "^[0-9]+\\.[0-9]+\\.[0-9]+([-+][0-9A-Za-z.-]+)?$")
@@ -262,7 +262,7 @@ if(RED_MONKEY_MPG_BUILD_PICO)
   pico_enable_stdio_uart(red_monkey_mpg_mobile_ble_bench 0)
   pico_add_extra_outputs(red_monkey_mpg_mobile_ble_bench)
 
-  # iPhone-to-CNC production bridge. This remains a separately flashed image
+  # Mobile-to-CNC production bridge. This remains a separately flashed image
   # from the Bluetooth gamepad receiver so either path has a known rollback.
   # The shared BLE implementation keeps the diagnostic parser and production
   # parser identical; only this target links the TinyUSB keyboard output.
@@ -307,7 +307,9 @@ if(RED_MONKEY_MPG_BUILD_PICO)
   pico_set_program_version(red_monkey_mpg_mobile_receiver
                            "${RED_MONKEY_MPG_RELEASE_VERSION}")
   pico_set_program_description(red_monkey_mpg_mobile_receiver
-                               "Red Monkey MPG iPhone CNC receiver")
+                               "Red Monkey MPG mobile CNC receiver")
+  set_target_properties(red_monkey_mpg_mobile_receiver PROPERTIES
+    OUTPUT_NAME "red-monkey-mpg-mobile-receiver")
   pico_add_extra_outputs(red_monkey_mpg_mobile_receiver)
 
   # Mac-only USB keyboard commissioning image. It has no Bluetooth input and
@@ -487,5 +489,7 @@ if(RED_MONKEY_MPG_BUILD_PICO)
                            "${RED_MONKEY_MPG_RELEASE_VERSION}")
   pico_set_program_description(red_monkey_mpg_production_receiver
                                "Red Monkey MPG CNC receiver release candidate")
+  set_target_properties(red_monkey_mpg_production_receiver PROPERTIES
+    OUTPUT_NAME "red-monkey-mpg-gamepad-receiver")
   pico_add_extra_outputs(red_monkey_mpg_production_receiver)
 endif()

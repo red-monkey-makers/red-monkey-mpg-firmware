@@ -59,21 +59,21 @@ jobs:
           -DRED_MONKEY_MPG_BUILD_HOST_TESTS=OFF
           -DRED_MONKEY_MPG_BUILD_PICO=ON
           -DCMAKE_BUILD_TYPE=Release
-      - name: Build gamepad and iPhone receivers
+      - name: Build gamepad and mobile receivers
         run: >-
           cmake --build build/pico
           --target red_monkey_mpg_production_receiver red_monkey_mpg_mobile_receiver
       - name: Upload gamepad receiver artifact
         uses: actions/upload-artifact@v7
         with:
-          name: red-monkey-mpg-pico2w-development-uf2
-          path: build/pico/red_monkey_mpg_production_receiver.uf2
+          name: red-monkey-mpg-gamepad-receiver-development-uf2
+          path: build/pico/red-monkey-mpg-gamepad-receiver.uf2
           if-no-files-found: error
           retention-days: 14
-      - name: Upload iPhone receiver artifact
+      - name: Upload mobile receiver artifact
         uses: actions/upload-artifact@v7
         with:
-          name: red-monkey-mpg-iphone-pico2w-development-uf2
-          path: build/pico/red_monkey_mpg_mobile_receiver.uf2
+          name: red-monkey-mpg-mobile-receiver-development-uf2
+          path: build/pico/red-monkey-mpg-mobile-receiver.uf2
           if-no-files-found: error
           retention-days: 14

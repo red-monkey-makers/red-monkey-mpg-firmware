@@ -71,10 +71,10 @@ for pass in a b; do
   configure_pico "$build_dir"
   "$ninja_bin" -C "$build_dir" red_monkey_mpg_production_receiver
 done
-cmp "$release_root/build-a/red_monkey_mpg_production_receiver.uf2" \
-    "$release_root/build-b/red_monkey_mpg_production_receiver.uf2"
-cp "$release_root/build-a/red_monkey_mpg_production_receiver.uf2" \
-   "$release_root/red-monkey-mpg-$release_version.uf2"
+cmp "$release_root/build-a/red-monkey-mpg-gamepad-receiver.uf2" \
+    "$release_root/build-b/red-monkey-mpg-gamepad-receiver.uf2"
+cp "$release_root/build-a/red-monkey-mpg-gamepad-receiver.uf2" \
+   "$release_root/red-monkey-mpg-gamepad-receiver-$release_version.uf2"
 
 host_dir="$release_root/host-tests"
 cmake -S "$repo_root" -B "$host_dir" -G Ninja \
@@ -93,7 +93,8 @@ node "$repo_root/scripts/generate-firmware-sbom.mjs" \
   find CMakeLists.txt firmware docs scripts -type f -print0 \
     | LC_ALL=C sort -z | xargs -0 shasum -a 256
 ) > "$release_root/source-files.sha256"
-(cd "$release_root" && shasum -a 256 "red-monkey-mpg-$release_version.uf2" \
+(cd "$release_root" && shasum -a 256 \
+  "red-monkey-mpg-gamepad-receiver-$release_version.uf2" \
   firmware.spdx.json source-files.sha256 > SHA256SUMS)
 
 if [[ -n ${RED_MONKEY_MPG_RELEASE_SIGNING_KEY:-} ]]; then

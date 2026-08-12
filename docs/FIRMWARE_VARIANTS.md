@@ -4,10 +4,14 @@ Every GitHub firmware release contains two installable UF2 images for the
 Raspberry Pi Pico 2 W. They are alternative receiver personalities. Install
 one—not both—according to the wireless control you intend to use.
 
+Release `v0.4.0-rc.2` predates this standardized convention and retains its
+original published asset names. Published release assets are immutable; use
+the names below for subsequent releases and local builds.
+
 | Release asset | Wireless input | Setup | Current CNC profile |
 |---|---|---|---|
-| `red-monkey-mpg-firmware-<version>.uf2` | Supported Bluetooth gamepad; currently 8BitDo Lite 2 in D mode | Red Monkey MPG browser configurator | Selectable; currently MASSO G3/G3 Touch 5.13 |
-| `red-monkey-mpg-iphone-receiver-<version>.uf2` | Red Monkey MPG iOS app | Profile selected in the iPhone app; no browser configurator | MASSO G3/G3 Touch 5.13 |
+| `red-monkey-mpg-gamepad-receiver-<version>.uf2` | Supported Bluetooth gamepad; currently 8BitDo Lite 2 in D mode | Red Monkey MPG browser configurator | Selectable; currently MASSO G3/G3 Touch 5.13 |
+| `red-monkey-mpg-mobile-receiver-<version>.uf2` | Red Monkey MPG iOS app | Profile selected in the iPhone app; no browser configurator | MASSO G3/G3 Touch 5.13 |
 
 ## Gamepad receiver
 

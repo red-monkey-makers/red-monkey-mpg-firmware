@@ -40,8 +40,8 @@ The build produces two alternative images:
 
 | Build output | Release name | Wireless input |
 |---|---|---|
-| `build/pico/red_monkey_mpg_production_receiver.uf2` | `red-monkey-mpg-firmware-<version>.uf2` | Supported gamepad |
-| `build/pico/red_monkey_mpg_mobile_receiver.uf2` | `red-monkey-mpg-iphone-receiver-<version>.uf2` | Red Monkey MPG iPhone app |
+| `build/pico/red-monkey-mpg-gamepad-receiver.uf2` | `red-monkey-mpg-gamepad-receiver-<version>.uf2` | Supported gamepad |
+| `build/pico/red-monkey-mpg-mobile-receiver.uf2` | `red-monkey-mpg-mobile-receiver-<version>.uf2` | Red Monkey MPG iPhone app |
 
 4. Hold BOOTSEL while connecting the Pico, then copy exactly one UF2 to the
    RPI-RP2 drive. Read [firmware variants](FIRMWARE_VARIANTS.md) before choosing.
@@ -58,7 +58,7 @@ Build the separate iPhone BLE-to-USB keyboard image with:
 cmake --build build/pico --target red_monkey_mpg_mobile_receiver
 ```
 
-The output is `build/pico/red_monkey_mpg_mobile_receiver.uf2`. It uses the
+The output is `build/pico/red-monkey-mpg-mobile-receiver.uf2`. It uses the
 MASSO CNC profile and is intentionally separate from the gamepad receiver so a
 known-good image remains available for rollback. Before connecting it to a
 machine, complete every stage in

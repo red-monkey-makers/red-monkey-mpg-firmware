@@ -79,14 +79,14 @@ for pass in a b; do
     red_monkey_mpg_production_receiver red_monkey_mpg_mobile_receiver --parallel
 done
 
-cmp "$release_root/build-a/red_monkey_mpg_production_receiver.uf2" \
-    "$release_root/build-b/red_monkey_mpg_production_receiver.uf2"
-cmp "$release_root/build-a/red_monkey_mpg_mobile_receiver.uf2" \
-    "$release_root/build-b/red_monkey_mpg_mobile_receiver.uf2"
-cp "$release_root/build-a/red_monkey_mpg_production_receiver.uf2" \
-   "$release_root/red-monkey-mpg-firmware-$release_version.uf2"
-cp "$release_root/build-a/red_monkey_mpg_mobile_receiver.uf2" \
-   "$release_root/red-monkey-mpg-iphone-receiver-$release_version.uf2"
+cmp "$release_root/build-a/red-monkey-mpg-gamepad-receiver.uf2" \
+    "$release_root/build-b/red-monkey-mpg-gamepad-receiver.uf2"
+cmp "$release_root/build-a/red-monkey-mpg-mobile-receiver.uf2" \
+    "$release_root/build-b/red-monkey-mpg-mobile-receiver.uf2"
+cp "$release_root/build-a/red-monkey-mpg-gamepad-receiver.uf2" \
+   "$release_root/red-monkey-mpg-gamepad-receiver-$release_version.uf2"
+cp "$release_root/build-a/red-monkey-mpg-mobile-receiver.uf2" \
+   "$release_root/red-monkey-mpg-mobile-receiver-$release_version.uf2"
 
 host_dir="$release_root/host-tests"
 cmake -S "$repo_root" -B "$host_dir" -G Ninja \
@@ -122,8 +122,8 @@ EOF
 (
   cd "$release_root"
   shasum -a 256 \
-    "red-monkey-mpg-firmware-$release_version.uf2" \
-    "red-monkey-mpg-iphone-receiver-$release_version.uf2" \
+    "red-monkey-mpg-gamepad-receiver-$release_version.uf2" \
+    "red-monkey-mpg-mobile-receiver-$release_version.uf2" \
     firmware.spdx.json RELEASE_METADATA.txt source-files.sha256 > SHA256SUMS
 )
 

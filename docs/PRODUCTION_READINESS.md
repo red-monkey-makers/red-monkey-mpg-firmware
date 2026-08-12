@@ -4,7 +4,7 @@ Review date: 2026-08-10
 
 Last fully reviewed candidate: `0.4.0-rc.1`
 
-Current preview candidate: `0.4.0-rc.2`
+Current preview candidate: `0.4.0-rc.3`
 
 ## Verdict
 

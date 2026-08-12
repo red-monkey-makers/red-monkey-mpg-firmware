@@ -15,16 +15,16 @@ Before tagging, update the `RED_MONKEY_MPG_RELEASE_VERSION`,
 ```bash
 git checkout main
 git pull --ff-only
-git tag -a v0.4.0-rc.2 -m "Red Monkey MPG firmware 0.4.0-rc.2"
-git push origin v0.4.0-rc.2
+git tag -a v0.4.0-rc.3 -m "Red Monkey MPG firmware 0.4.0-rc.3"
+git push origin v0.4.0-rc.3
 ```
 
 The workflow checks out that exact tag, fetches the pinned Pico SDK, performs
 two clean builds of both receiver variants, compares each UF2 byte-for-byte, runs the
 sanitizer-backed host tests, and generates:
 
-- the versioned Bluetooth-gamepad receiver UF2;
-- the versioned iPhone receiver UF2;
+- `red-monkey-mpg-gamepad-receiver-<version>.uf2`;
+- `red-monkey-mpg-mobile-receiver-<version>.uf2`;
 - `SHA256SUMS`;
 - an SPDX firmware SBOM;
 - tagged-source checksums; and
@@ -43,13 +43,18 @@ To stage the same preview package locally with the pinned SDK already present:
 
 ```bash
 export PICO_SDK_PATH=/path/to/pinned/pico-sdk
-scripts/stage-preview-release.sh 0.4.0-rc.2
+scripts/stage-preview-release.sh 0.4.0-rc.3
 ```
 
 The script refuses to overwrite an existing version directory under
 `outputs/releases/`. Delete nothing merely to reuse a version; increment the
 prerelease number instead. Published release tags and assets should be treated
 as immutable.
+
+Local CMake builds omit only the version suffix and produce
+`red-monkey-mpg-gamepad-receiver.uf2` and
+`red-monkey-mpg-mobile-receiver.uf2`. Keep these base names consistent across
+CMake, CI artifacts, checksums, release assets, and documentation.
 
 ## Controlled commercial releases
 
