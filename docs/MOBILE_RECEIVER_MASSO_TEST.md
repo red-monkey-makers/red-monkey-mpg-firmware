@@ -1,8 +1,9 @@
 # iPhone receiver: MASSO commissioning test
 
 This procedure is the hardware-in-the-loop qualification gate for
-`red_monkey_mpg_mobile_receiver.uf2`. It bridges the Red Monkey MPG iOS app to
-MASSO through the Pico 2 W USB keyboard interface.
+the `red_monkey_mpg_mobile_receiver` build target, distributed as
+`red-monkey-mpg-iphone-receiver-<version>.uf2`. It bridges the Red Monkey MPG
+iOS app to MASSO through the Pico 2 W USB keyboard interface.
 
 This is release-candidate testing, not proof of commercial product safety. The
 receiver and phone are not safety-rated controls and never replace the physical
@@ -27,8 +28,9 @@ source is uncertain.
 
 Complete this stage before connecting the receiver to MASSO.
 
-1. Flash `red_monkey_mpg_mobile_receiver.uf2` with the Pico disconnected from
-   the machine.
+1. Flash the checksum-verified
+   `red-monkey-mpg-iphone-receiver-<version>.uf2` with the Pico disconnected
+   from the machine.
 2. Connect the Pico to a Mac or Windows computer using the intended USB cable.
 3. Open Keyboard Viewer (macOS) or an equivalent keyboard-event tester.
 4. Open Red Monkey MPG on the iPhone, find **Red Monkey MPG**, connect, and

@@ -1,6 +1,6 @@
-# Red Monkey MPG iOS: motion-safe BLE bench test
+# Red Monkey MPG iPhone app: motion-safe BLE bench test
 
-The `red_monkey_mpg_mobile_ble_bench` target lets you test the iOS client and Pico BLE
+The `red_monkey_mpg_mobile_ble_bench` target lets you test the iPhone app and Pico BLE
 protocol without producing USB keyboard reports.
 
 > **Do not connect this diagnostic firmware to a CNC controller or machine.**

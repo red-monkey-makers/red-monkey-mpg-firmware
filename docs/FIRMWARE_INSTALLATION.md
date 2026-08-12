@@ -29,17 +29,24 @@ red-monkey-mpg-firmware-0.4.0-rc.2.uf2
 red-monkey-mpg-iphone-receiver-0.4.0-rc.2.uf2
 ```
 
-The first image accepts the supported Bluetooth gamepad; the second accepts the
-Red Monkey MPG iPhone app. Install exactly one variant. The version will change
-in later releases. Do not copy GitHub's automatically
-generated source-code ZIP or TAR files to the receiver. Do not install files
+Install exactly one variant. The version will change in later releases. Do not
+copy GitHub's automatically generated source-code ZIP or TAR files to the
+receiver. Do not install files
 named `keyboard_bench`, `hid_dump`, `bt_scan`, `live_bridge_bench`,
 `commissioning`, or `preview`; those are development and diagnostic images.
 
+| File | Use it for |
+|---|---|
+| `red-monkey-mpg-firmware-<version>.uf2` | Supported Bluetooth gamepad; currently the 8BitDo Lite 2 in D mode |
+| `red-monkey-mpg-iphone-receiver-<version>.uf2` | Red Monkey MPG iPhone app |
+
+See [Choose a receiver firmware image](FIRMWARE_VARIANTS.md) for the full
+comparison.
+
 ## Optional: verify the download
 
-Each release lists the firmware SHA-256 in its release notes. Verifying it
-confirms that the downloaded file matches the published asset.
+GitHub displays a SHA-256 digest for each release asset. Verifying it confirms
+that the downloaded file matches the published asset.
 
 On macOS, open Terminal and run:
 
@@ -80,19 +87,19 @@ If the receiver enclosure does not provide safe BOOTSEL access, follow the
 supplier's instructions. Do not open or modify a supplied enclosure unless the
 supplier specifically instructs you to do so.
 
-## Pairing and mapping after an update
+## Saved settings after an update
 
-A normal UF2 installation is designed to preserve the paired controller and
-saved mapping. They are stored in reserved flash sectors outside the firmware
-application image.
+For the gamepad receiver, a normal UF2 installation is designed to preserve the
+paired controller and saved mapping in reserved flash sectors outside the
+application image. The iPhone receiver does not use the browser configurator or
+the gamepad mapping record; its CNC profile is selected in the iPhone app.
 
 Do **not** use a full-chip erase utility or a `flash_nuke.uf2` file. Those can
-erase the pairing keys and saved mapping. Even after a normal update, always
-verify reconnection and configuration before returning the receiver to machine
-service. If either is missing, reconnect the receiver to a computer and use
-the Red Monkey MPG Configurator to pair and save the intended profile again.
+erase Bluetooth keys and saved configuration. Even after a normal update,
+always verify reconnection and the selected CNC profile before returning the
+receiver to machine service.
 
-## Reconnect after installation
+## Reconnect the gamepad receiver
 
 1. Confirm the controller is in its commissioned mode. The supplied 8BitDo
    Lite 2 configuration uses **D mode**.
@@ -109,11 +116,41 @@ the Red Monkey MPG Configurator to pair and save the intended profile again.
    controller into pairing mode.
 7. Keep every control neutral until the receiver LED becomes solid.
 
+If the pairing or mapping is missing, reconnect the receiver to a computer and
+use the Red Monkey MPG Configurator to pair and save the intended profile.
+
+## Reconnect the iPhone receiver
+
+1. Confirm you installed `red-monkey-mpg-iphone-receiver-<version>.uf2`.
+2. Connect the receiver to a computer for initial keyboard-viewer testing, or
+   to the CNC controller only after that testing passes.
+3. Open Red Monkey MPG on the iPhone and use the antenna/connection menu.
+4. Find and select **Red Monkey MPG**. Accept the iOS pairing prompt if shown.
+5. Select the intended CNC controller profile in the app; currently MASSO.
+6. Wait for the app to report the receiver ready and show the motion controls.
+7. Keep all direction controls released until the connection is ready.
+
+The iPhone image does not appear in the browser configurator and does not
+accept a Bluetooth gamepad. Follow the
+[iPhone end-user guide](IPHONE_END_USER_GUIDE.md) for daily operation.
+
 ## Required post-update safety check
 
-Perform this check with cutting energy disabled, the work area clear, the
-physical E-stop accessible, the smallest step size selected, and a very low jog
-feed:
+Perform the common checks plus the checklist for the installed variant with
+cutting energy disabled, the work area clear, the physical E-stop accessible,
+the smallest step size selected, and a very low jog feed.
+
+### Both variants
+
+- [ ] The downloaded filename matches the intended wireless input.
+- [ ] Each commanded axis and direction matches the machine display and
+      physical movement.
+- [ ] Two simultaneous axis commands are never emitted.
+- [ ] Wireless disconnect and receiver power loss release movement.
+- [ ] Motion remains stopped after reconnect until controls return to neutral.
+- [ ] Step-size controls change only the intended displayed CNC setting.
+
+### Gamepad receiver
 
 - [ ] The expected firmware version, controller, mapping, and CNC profile are
       shown by the configurator.
@@ -121,12 +158,18 @@ feed:
 - [ ] The receiver becomes ready only after all buttons are released and both
       sticks are centered.
 - [ ] Moving either stick without holding L2 causes no machine movement.
-- [ ] Each commanded axis and direction matches the machine display and
-      physical movement.
 - [ ] A diagonal input never moves more than one axis.
 - [ ] Releasing L2 immediately stops pendant-commanded movement.
 - [ ] Turning off the controller during a low-risk test releases movement.
-- [ ] Step-size controls change only the intended displayed CNC setting.
+
+### iPhone receiver
+
+- [ ] The app is not in Demo mode and shows the intended CNC profile.
+- [ ] Single Step sends one bounded step per recognized tap.
+- [ ] Continuous motion exists only while one direction control is held.
+- [ ] Lifting the finger, backgrounding the app, or locking the phone releases
+      movement immediately.
+- [ ] Multi-touch or sliding between controls never activates two axes.
 
 Stop and remove the receiver from service if any check fails. Use the physical
 E-stop for dangerous or unexpected movement.
@@ -159,11 +202,21 @@ once. Do not press Pair during a normal reconnect. If it still does not
 connect, use the configurator to verify or repeat pairing while the receiver is
 connected only to the computer.
 
-### The receiver flashes rapidly after the update
+This section applies only to the gamepad image. For the iPhone image, open the
+app's connection menu, confirm Bluetooth is enabled, and select **Red Monkey
+MPG**. If needed, remove the old bond in iOS Bluetooth settings and pair again.
+
+### The gamepad receiver flashes rapidly after the update
 
 Release L2 and every other button, then center both sticks. Rapid flashing
 means the controller is connected but the receiver is waiting for a neutral
 state before it can arm.
+
+### The iPhone app connects but shows no controls
+
+Confirm the receiver reports ready, the app is not in Demo mode, and the
+iPhone receiver UF2 is installed. Disconnect in the app, power-cycle the Pico,
+and reconnect. Do not use the browser configurator with the iPhone image.
 
 ### The update was interrupted
 

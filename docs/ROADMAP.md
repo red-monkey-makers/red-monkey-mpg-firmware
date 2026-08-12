@@ -46,6 +46,14 @@
 - [ ] Add a diagnostic-only generic HID inspector for profile contributors
 - [ ] Qualify a second controller through the complete contribution workflow
 
+## 0.7 — iPhone receiver
+
+- [x] Add a bounded BLE command protocol and shared safety mapper
+- [x] Add a separately flashed iPhone-to-USB-keyboard receiver
+- [x] Add mobile protocol/bridge tests and staged MASSO qualification
+- [x] Package gamepad and iPhone UF2 images in the same firmware release
+- [ ] Qualify the iPhone receiver across a production-representative hardware lot
+
 ## 1.0 — Commercial release gates
 
 - Obtain an authorized USB VID/PID and update firmware/app filters

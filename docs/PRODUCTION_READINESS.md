@@ -14,7 +14,7 @@ software tests does not certify a wireless machine-motion accessory.
 
 ## Controls implemented
 
-- Held dead-man, one dominant axis, center-before-axis-change, stale-report
+- Held motion intent, one dominant axis, center-before-axis-change, stale-report
   timeout, neutral re-arm, and immediate all-keys release on relevant faults
 - Release on Bluetooth loss, malformed controller report, USB unmount/suspend,
   HID send failure, setup entry, and watchdog reset
@@ -34,13 +34,14 @@ software tests does not certify a wireless machine-motion accessory.
 - Commercial CMake guard rejects the development VID and requires an explicit
   signed-boot manufacturing-process assertion plus a qualified controller HID
   descriptor SHA-256
-- Controlled release tooling performs two clean firmware builds, byte compares
-  them, runs sanitizer/configurator checks, and generates checksums and SPDX
+- Preview release tooling builds both receiver variants twice, byte-compares
+  each UF2, runs sanitizer-backed checks, and generates checksums and SPDX
   inventories without generating or storing signing keys
 
 ## Verification completed
 
-- Five host test executables pass normally and under ASan/UBSan, including
+- Seven host test executables pass normally and under ASan/UBSan, including
+  the mobile protocol and bridge suites and
   unsupported/incomplete/ambiguous controller-profile rejection
 - Deterministic property tests exercise 20,000 state sequences plus full analog
   byte ranges, wraparound timing, invalid mappings, and keyboard report bounds
@@ -89,11 +90,17 @@ software tests does not certify a wireless machine-motion accessory.
 10. **Configurator compatibility:** pin the independently released configurator
     version tested with each firmware release and retain its CI, SBOM, and
     dependency-review evidence in the approval record.
+11. **iPhone path qualification:** pin the compatible iOS app version, complete
+    BLE reconnect/background/lock/timeout tests across supported iPhone and iOS
+    versions, and extend the controlled commercial packaging/approval process
+    to cover the mobile receiver image independently.
 
 ## Known residual design limits
 
 - Bluetooth Classic Just Works does not provide authenticated MITM protection;
   the physical chord is an application-level provisioning control.
+- The gamepad and iPhone transports are separate firmware images. The current
+  stack supports one wireless input path at a time, not simultaneous clients.
 - The setup channel has no account login. Browser permission and physical USB
   possession are its intended authorization boundary.
 - The embedded setup parser is intentionally narrow, not a general JSON parser.

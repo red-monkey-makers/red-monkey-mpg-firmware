@@ -1,4 +1,4 @@
-# Red Monkey MPG user guide — MASSO G3 Touch
+# Red Monkey MPG gamepad user guide — MASSO G3 Touch
 
 <p align="center">
   <img src="assets/red-monkey-mpg-banner.webp" alt="Red Monkey MPG — Pair once. Jog with confidence." width="100%">
@@ -7,6 +7,10 @@
 This guide is for an end user who received a Red Monkey MPG receiver already
 programmed, configured, and paired for a MASSO G3 Touch. No firmware tools or
 setup application are required for normal operation.
+
+This guide applies only to the gamepad receiver firmware. For the separately
+flashed iPhone receiver, use the
+[Red Monkey MPG iPhone user guide](IPHONE_END_USER_GUIDE.md).
 
 For firmware installation or updates, follow the separate
 [Firmware installation guide](FIRMWARE_INSTALLATION.md) before returning the

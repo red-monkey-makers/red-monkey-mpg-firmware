@@ -53,6 +53,12 @@ as immutable.
 
 ## Controlled commercial releases
 
+The current preview workflow packages both receiver variants. The controlled
+commercial script remains gamepad-only until the iPhone path has its own pinned
+app compatibility record, hardware qualification, and approval inputs. Do not
+represent a mobile preview UF2 as an approved commercial image merely because
+it was built by the preview workflow.
+
 The release script builds the receiver twice in clean directories, compares
 the UF2 files byte-for-byte, runs sanitizer-backed host tests, creates a
 firmware SPDX SBOM, and writes a checksum manifest. It refuses to overwrite an

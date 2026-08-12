@@ -32,17 +32,25 @@ cmake -S . -B build/pico \
   -DRED_MONKEY_MPG_BUILD_HOST_TESTS=OFF \
   -DRED_MONKEY_MPG_BUILD_PICO=ON \
   -DPICO_BOARD=pico2_w
-cmake --build build/pico --target red_monkey_mpg_production_receiver
+cmake --build build/pico --target \
+  red_monkey_mpg_production_receiver red_monkey_mpg_mobile_receiver
 ```
 
-4. Hold BOOTSEL while connecting the Pico, then copy
-   `red_monkey_mpg_production_receiver.uf2` from `build/pico` to the RPI-RP2 drive.
+The build produces two alternative images:
+
+| Build output | Release name | Wireless input |
+|---|---|---|
+| `build/pico/red_monkey_mpg_production_receiver.uf2` | `red-monkey-mpg-firmware-<version>.uf2` | Supported gamepad |
+| `build/pico/red_monkey_mpg_mobile_receiver.uf2` | `red-monkey-mpg-iphone-receiver-<version>.uf2` | Red Monkey MPG iPhone app |
+
+4. Hold BOOTSEL while connecting the Pico, then copy exactly one UF2 to the
+   RPI-RP2 drive. Read [firmware variants](FIRMWARE_VARIANTS.md) before choosing.
 
 All diagnostic, stub, preview, and commissioning targets are excluded from the
 default build. Build one explicitly only when following its matching test
 document. Never distribute those images as machine firmware.
 
-## iPhone mobile receiver candidate
+## iPhone receiver
 
 Build the separate iPhone BLE-to-USB keyboard image with:
 

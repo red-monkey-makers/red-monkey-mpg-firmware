@@ -4,17 +4,24 @@
   <img src="docs/assets/red-monkey-mpg-banner.webp" alt="Red Monkey MPG — Pair once. Jog with confidence." width="100%">
 </p>
 
-Red Monkey MPG is an experimental, source-available wireless CNC jog-pendant bridge.
-A Raspberry Pi Pico 2 W receives input from a supported Bluetooth controller
-and presents itself as a USB keyboard using a selectable CNC controller profile.
+Red Monkey MPG is an experimental, source-available wireless CNC jog-pendant
+bridge. A Raspberry Pi Pico 2 W runs one of two receiver firmware images:
+
+- a **gamepad receiver** for a supported Bluetooth controller; or
+- an **iPhone receiver** for the Red Monkey MPG iOS app.
+
+Both variants present the Pico to the CNC controller as a USB keyboard and
+enforce the same fixed motion-safety rules. Install exactly one firmware image
+at a time.
 
 <p align="center">
-  <img src="docs/assets/red-monkey-mpg-product.jpg" alt="Red Monkey MPG receiver with coral 8BitDo Lite 2 controller and USB cable" width="900">
+  <img src="docs/assets/red-monkey-mpg-product.jpg" alt="Red Monkey MPG receiver with coral 8BitDo Lite 2 controller and USB cable, showing the gamepad configuration" width="900">
 </p>
 
 > **Release status:** `0.4.0-rc.2` is a hardened release candidate,
 > not an approved commercial image. The prototype has completed Mac keyboard
-> and machine testing with the first CNC controller profile and one gamepad.
+> and machine testing with the first CNC controller profile using both the
+> gamepad and iPhone receiver paths.
 > Red Monkey MPG is not a
 > safety-rated control and never replaces a hard-wired E-stop or normal machine
 > safeguards. See [Production readiness](docs/PRODUCTION_READINESS.md).
@@ -22,7 +29,8 @@ and presents itself as a USB keyboard using a selectable CNC controller profile.
 ## Intended hardware
 
 - Raspberry Pi Pico 2 W (RP2350 + CYW43439 wireless controller)
-- 8BitDo Lite 2 Bluetooth gamepad
+- One wireless input: a supported Bluetooth gamepad or an iPhone running the
+  [Red Monkey MPG app](https://github.com/red-monkey-makers/red-monkey-cnc-jogger)
 - Data-capable **Micro-USB** cable to the CNC controller's USB keyboard port
 - A physical, hard-wired emergency stop independent of Red Monkey MPG
 
@@ -31,14 +39,18 @@ powers the Pico and carries USB HID keyboard reports to the CNC controller.
 
 ## End-user guides
 
+- [Choose a firmware image](docs/FIRMWARE_VARIANTS.md) — compare the gamepad
+  and iPhone receiver variants and download the correct UF2.
 - [Firmware installation and updates](docs/FIRMWARE_INSTALLATION.md) — download,
   verify, install, recover, and validate an official UF2 release on macOS or
   Windows.
-- [MASSO G3 Touch end-user guide](docs/MASSO_END_USER_GUIDE.md) — startup,
-  controls, daily operation, safety checks, and troubleshooting for a receiver
-  supplied preprogrammed for MASSO.
+- [Gamepad + MASSO end-user guide](docs/MASSO_END_USER_GUIDE.md) — startup,
+  controls, daily operation, safety checks, and troubleshooting for the
+  gamepad receiver.
+- [iPhone + MASSO end-user guide](docs/IPHONE_END_USER_GUIDE.md) — connect the
+  app, choose step or continuous motion, jog, reconnect, and troubleshoot.
 - [Mobile BLE bench test](docs/MOBILE_BLE_BENCH_TEST.md) — safely exercise the
-  Red Monkey CNC Jogger iOS client with a diagnostic UF2 that cannot emit CNC
+  Red Monkey MPG iOS app with a diagnostic UF2 that cannot emit CNC
   keyboard commands.
 - [iPhone receiver MASSO test](docs/MOBILE_RECEIVER_MASSO_TEST.md) — staged
   computer, motion-disabled, and minimum-speed qualification for the mobile
@@ -47,15 +59,19 @@ powers the Pico and carries USB HID keyboard reports to the CNC controller.
 ## Design
 
 ```text
-Bluetooth controller --> Pico 2 W --> safety mapper --> CNC output profile
+Bluetooth gamepad ----> gamepad receiver UF2 --+
+                                                 +--> safety mapper
+Red Monkey MPG app ---> iPhone receiver UF2 ---+          |
+                                                   CNC output profile
                                                           |
-                                                  USB HID keyboard
+                                                   USB HID keyboard
 ```
 
 The portable mapping core is isolated from the Bluetooth and USB transports.
 This makes its safety behavior testable on a desktop before hardware is used.
-See [CNC controller profiles](docs/CNC_CONTROLLER_PROFILES.md) for the output
-extension contract and [input-controller profiles](docs/CONTROLLER_PROFILES.md)
+See [firmware variants](docs/FIRMWARE_VARIANTS.md) for the transport split,
+[CNC controller profiles](docs/CNC_CONTROLLER_PROFILES.md) for the output
+extension contract, and [input-controller profiles](docs/CONTROLLER_PROFILES.md)
 for supported gamepad parsing.
 
 ## Repository layout
@@ -110,8 +126,8 @@ profile using its profile-specific guide, with motion physically disabled
 before any powered test. The first guide is
 [MASSO G3 Touch 5.13 commissioning](docs/MASSO_G3_513_COMMISSIONING.md).
 
-The unified `outputs/red_monkey_mpg_production_receiver.uf2` image is the current
-release candidate for setup and controlled machine testing. It exposes a
+The `red-monkey-mpg-firmware-<version>.uf2` release image is the gamepad
+receiver. Its build target is `red_monkey_mpg_production_receiver`. It exposes a
 fail-closed setup channel over USB serial on Mac/Windows and acts as a USB
 keyboard using the selected CNC profile whenever the setup port is closed.
 Pairing and mappings persist in redundant, CRC-checked flash records, and every
@@ -119,7 +135,7 @@ receiver exposes a USB serial derived from its Pico chip ID. Follow
 [docs/PRODUCTION_RECEIVER_TEST.md](docs/PRODUCTION_RECEIVER_TEST.md) before
 machine use.
 
-The separate `red-monkey-mpg-iphone-receiver-<version>.uf2` release image accepts
+The `red-monkey-mpg-iphone-receiver-<version>.uf2` release image accepts
 the Red Monkey MPG iOS app instead of a Bluetooth gamepad. GitHub prereleases
 include both variants, but only one image can be installed on a Pico at a time.
 Complete the [iPhone receiver MASSO test](docs/MOBILE_RECEIVER_MASSO_TEST.md)
@@ -128,7 +144,8 @@ before machine use.
 ## Principles
 
 1. Release, disconnect, stale input, and faults always stop output.
-2. Motion requires a held dead-man button and a deliberate direction input.
+2. Motion requires a deliberate held input: gamepad dead-man plus direction,
+   or an actively held iPhone direction control.
 3. Output is limited to one axis at a time; changing axes requires recentering.
 4. No wireless device replaces a hard-wired E-stop.
 5. Destructive commands (zero, home, start) require explicit confirmation and
